@@ -1,6 +1,7 @@
 import java.util.ArrayList; // for an easier life
 import java.util.List;
 
+// Test!
 public class Pokemon {
     // Attributes
     private int pokedexNumber; 
