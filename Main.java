@@ -5,12 +5,16 @@ public class Main {
         java.util.Scanner scan = new Scanner(System.in);
         int choice;
 
+        // Initialize Managers
+        Items itemManager = new Items(scan);
+        MoveManager moveManager = new MoveManager(scan);
+        moveManager.loadDefaultMoves();
+
         // Main Menu
         System.out.println("========================================================================");
-        System.out.println("| 1. Add Pokemon            5. View Moves           9. Add Trainer     |");
-        System.out.println("| 2. View All Pokemon       6. Search Moves        10. View Trainers   |");
-        System.out.println("| 3. Search Pokemon         7. View Items          11. Search Trainers |");
-        System.out.println("| 4. Add Move               8. Search Items        12. Exit            |");
+        System.out.println("| 1. Add Pokemon            4. Add Move            7. View Items       |");
+        System.out.println("| 2. View All Pokemon       5. View Moves          8. Search Items     |");
+        System.out.println("| 3. Search Pokemon         6. Search Moves        9. Exit             |");
         System.out.println("========================================================================");
 
         while (true) {
@@ -18,6 +22,7 @@ public class Main {
 
             if (scan.hasNextInt()) {
                 choice = scan.nextInt();
+                scan.nextLine();
 
                 if (choice < 1 || choice > 12) {
                     System.out.println("Incorrect input. Please try again!");
@@ -33,30 +38,21 @@ public class Main {
                             // searchPokemon()
                             break;
                         case 4:
-                            // addMove()
+                            moveManager.addMove();
                             break;
                         case 5:
-                            // viewMoves()
+                            moveManager.viewAllMovesAvailable();
                             break;
                         case 6:
-                            // searchMoves()
+                            moveManager.handleMoveSearch();
                             break;
                         case 7:
-                            // viewItems()
+                            itemManager.viewAllItemsAvailable();
                             break;
                         case 8:
-                            // searchItems()
+                            itemManager.handleItemSearch();
                             break;
                         case 9:
-                            // addTrainer()
-                            break;
-                        case 10:
-                            // viewTrainers()
-                            break;
-                        case 11:
-                            // searchTrainers()
-                            break;
-                        case 12:
                             System.out.println("Exiting program. . .");
                             scan.close();
                             System.exit(0);
