@@ -3,17 +3,22 @@ public class Move {
     private String name;
     private String description;
     private String classification; // Hidden Machine (HM) or Technical Machine (TM)
-    private String type1;
-    private String type2;
+    private String primaryType;
+    private String secondaryType; // optional
 
 
-    // Constructor
-    public Move(String name, String description, String classification, String type1, String type2) {
+    // Constructor 
+    // with type 2
+    public Move(String name, String description, String classification, String primaryType, String secondaryType) {
         this.name = name;
         this.description = description;
         this.classification = classification;
-        this.type1 = type1;
-        this.type2 = type2;
+        this.primaryType = primaryType;
+        this.secondaryType = secondaryType;
+    }
+    // without type 2
+    public Move(String name, String description, String classification, String primaryType) {
+        this(name, description, classification, primaryType, null);
     }
 
 
@@ -30,11 +35,11 @@ public class Move {
         return classification;
     }
 
-    public String getType1() {
-        return type1;
+    public String getprimaryType() {
+        return primaryType;
     }
 
-    public String getType2() {
-        return type2;
+    public String getsecondaryType() {
+        return secondaryType;
     }
 }
