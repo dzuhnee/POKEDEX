@@ -2,7 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// This class represents a single Pokémon item
 public class Item {
+    // These are the properties of the item
     private final int buyingPrice;
     private final String name;
     private final String category;
@@ -11,6 +13,7 @@ public class Item {
     private final int sellingPrice;
     private int stock;
 
+    // Constructor: sets all the values when an item is created
     public Item(String name, String category, String description, String effect,
                 int buyingPrice, int sellingPrice, int stock) {
         this.name = name;
@@ -57,17 +60,20 @@ public class Item {
     }
 }
 
+// This class manages a whole list of items
 class Items {
 
-    private final Scanner scanner;
-    private final List<Item> itemList;
+    private final Scanner scanner; // For taking user input
+    private final List<Item> itemList; // List to store all the item objects
 
+    // Constructor: initializes the list and adds default items
     public Items(final Scanner scanner) {
         itemList = new ArrayList<>();
         populateInitialItems();
         this.scanner = scanner;
     }
 
+    // Adds sample items to the database (vitamins, feathers, stones, etc.)
     public void populateInitialItems() {
         // Vitamins (boost EVs)
         itemList.add(new Item("Calcium", "Vitamin", "A nutritious drink for Pokémon.", "+10 Special Attack EVs", 10000, 5000, 10));
@@ -101,6 +107,7 @@ class Items {
         itemList.add(new Item("Ice Stone", "Evolution Stone", "Cold to the touch.", "Evolves Alolan Vulpix, etc.", 3000, 1500, 10));
     }
 
+    // Displays all items
     public void viewAllItemsAvailable() {
         if (itemList.isEmpty()) {
             System.out.println("\nSystem: No items in the database.");
@@ -118,6 +125,7 @@ class Items {
         System.out.printf(formatHeader, "\nItem Name", "Category", "Effect");
         System.out.println("=========================================================================");
     
+        // Loop through each item and print it
         for (Item item : itemList) {
             String name = item.getName();
             String category = item.getCategory();
@@ -137,6 +145,7 @@ class Items {
         }
     }    
 
+    // Menu to handle search options (by name/effect or by category)
     public void handleItemSearch() {
         System.out.println("\n--- Search Pokémon Items ---");
         System.out.printf("%-5s %-30s%n", "1.", "By Name or Effect");
@@ -164,6 +173,7 @@ class Items {
         }
     }
 
+    // Searches for items by name or by their effect text
     public void searchItemsByNameOrEffect(String keyword) {
         List<Item> results = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
@@ -177,6 +187,7 @@ class Items {
         showItemSearchResults(results, "Name/Effect contains: " + keyword);
     }
 
+    // Searches for items by their category (Vitamin, Feather, etc.)
     public void searchByCategory(String category) {
         List<Item> results = new ArrayList<>();
         for (Item item : itemList) {
@@ -187,6 +198,7 @@ class Items {
         showItemSearchResults(results, "Category: " + category);
     }
 
+    // Show item results
     private void showItemSearchResults(List<Item> results, String title) {
         if (results.isEmpty()) {
             System.out.println("No items found for " + title);
