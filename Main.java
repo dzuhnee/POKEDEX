@@ -5,10 +5,13 @@ public class Main {
         java.util.Scanner scan = new Scanner(System.in);
         int choice;
 
+
         // Initialize Managers
+        PokemonManager pokemonManager = new PokemonManager();
         Items itemManager = new Items(scan);
         MoveManager moveManager = new MoveManager(scan);
         moveManager.loadDefaultMoves();
+
 
         // Main Menu
         System.out.println("========================================================================");
@@ -29,7 +32,7 @@ public class Main {
                 } else {
                     switch (choice) {
                         case 1:
-                            // addPokemon()
+                            pokemonManager.addPokemon(moveManager, itemManager);
                             break;
                         case 2:
                             // viewAllPokemon()
