@@ -10,14 +10,15 @@ public class Main {
         MoveManager moveManager = new MoveManager(scan);
         moveManager.loadDefaultMoves();
 
-        // Main Menu
-        System.out.println("========================================================================");
-        System.out.println("| 1. Add Pokemon            4. Add Move            7. View Items       |");
-        System.out.println("| 2. View All Pokemon       5. View Moves          8. Search Items     |");
-        System.out.println("| 3. Search Pokemon         6. Search Moves        9. Exit             |");
-        System.out.println("========================================================================");
-
         while (true) {
+            // Main Menu
+            System.out.printf("\n%45s%n", "Pokémon Database Menu");
+            System.out.println("========================================================================");
+            System.out.println("| 1. Add Pokemon            4. Add Move            7. View Items       |");
+            System.out.println("| 2. View All Pokemon       5. View Moves          8. Search Items     |");
+            System.out.println("| 3. Search Pokemon         6. Search Moves        9. Exit             |");
+            System.out.println("========================================================================");
+
             System.out.print("Enter choice: ");
 
             if (scan.hasNextInt()) {

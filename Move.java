@@ -194,21 +194,40 @@ class MoveManager {
         } else {
             System.out.printf("%-20s %-10s %-15s %-55s\n", "Move Name", "Class", "Type(s)", "Description");
             System.out.println("-------------------------------------------------------------------------------------------");
-
+    
             for (Move m : moveList) {
                 String types = m.getPrimaryType();
                 if (m.getSecondaryType() != null && !m.getSecondaryType().isEmpty()) {
                     types += "/" + m.getSecondaryType();
                 }
-
-                System.out.printf("%-20s %-10s %-15s %-55s\n",
-                        m.getName(),
-                        m.getClassification(),
-                        types,
-                        m.getDescription());
+    
+                String description = m.getDescription();
+                int descWidth = 55;
+    
+                if (description.length() <= descWidth) {
+                    System.out.printf("%-20s %-10s %-15s %-55s\n",
+                            m.getName(),
+                            m.getClassification(),
+                            types,
+                            description);
+                } else {
+                    System.out.printf("%-20s %-10s %-15s %-55s\n",
+                            m.getName(),
+                            m.getClassification(),
+                            types,
+                            description.substring(0, descWidth));
+    
+                    int start = descWidth;
+                    while (start < description.length()) {
+                        int end = Math.min(start + descWidth, description.length());
+                        String line = description.substring(start, end);
+                        System.out.printf("%-20s %-10s %-15s %-55s\n", "", "", "", line);
+                        start += descWidth;
+                    }
+                }
             }
         }
-    }
+    }    
 
     public void handleMoveSearch() {
         System.out.println("\n--- Search Pokémon Moves ---");
