@@ -193,7 +193,7 @@ class MoveManager {
             System.out.println("\nSystem: No moves in the database.");
         } else {
             System.out.printf("%-20s %-10s %-15s %-55s\n", "Move Name", "Class", "Type(s)", "Description");
-            System.out.println("-------------------------------------------------------------------------------------------");
+            System.out.println("=======================================================================================================");
     
             for (Move m : moveList) {
                 String types = m.getPrimaryType();
