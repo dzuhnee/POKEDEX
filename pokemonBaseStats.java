@@ -1,4 +1,4 @@
-public class pokemonBaseStats {
+public class PokemonBaseStats {
     // Attributes
     private int hp;
     private int attack;
@@ -7,7 +7,7 @@ public class pokemonBaseStats {
 
 
     // Constructor
-    public pokemonBaseStats(int hp, int attack, int defense, int speed) {
+    public PokemonBaseStats(int hp, int attack, int defense, int speed) {
         this.hp = hp;
         this.attack = attack;
         this.defense = defense;
@@ -16,7 +16,7 @@ public class pokemonBaseStats {
 
     
     // Getters
-    public int getHp() {
+    public int getHP() {
         return hp;
     }
 
@@ -30,5 +30,23 @@ public class pokemonBaseStats {
 
     public int getSpeed() {
         return speed;
+    }
+
+
+    // Setters
+    public void setHP(int hp) {
+        this.hp = hp;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 }
