@@ -32,13 +32,13 @@ public class Main {
                 } else {
                     switch (choice) {
                         case 1:
-                            pokemonManager.addPokemon(moveManager, itemManager);
+                            pokemonManager.addPokemon();
                             break;
                         case 2:
-                            // viewAllPokemon()
+                            pokemonManager.displayAllPokemons();
                             break;
                         case 3:
-                            // searchPokemon()
+                            pokemonManager.handlePokemonSearch();
                             break;
                         case 4:
                             moveManager.addMove();

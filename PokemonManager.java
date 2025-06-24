@@ -28,6 +28,11 @@ public class PokemonManager {
 
         // Pokedex Number
         pokedexNumber = readValidInt(scan, "pokedex number");
+        // for (Pokemon p : pokemons) {
+        //     if (p.getPokedexNumber() == pokedexNumber) {
+
+        //     }
+        // }
 
         // Type 1
         primaryType = readValidString(scan, "primary type", "[A-Za-z\\s]+");
