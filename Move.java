@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// This class represents a Pokémon move
 public class Move {
 
     private final String name;
@@ -10,6 +11,7 @@ public class Move {
     private final String primaryType;
     private final String secondaryType;
 
+    // Constructor to initialize all the move properties
     public Move(String name, String description, Classification classification, String primaryType,
                 String secondaryType) {
         this.name = name;
@@ -19,6 +21,7 @@ public class Move {
         this.secondaryType = secondaryType;
     }
 
+    // Getters
     public String getName() {
         return name;
     }
@@ -45,6 +48,7 @@ public class Move {
     }
 }
 
+// Helper class for taking validated user input when adding a move
 class MoveInputHelper {
 
     private final Scanner scanner;
@@ -53,6 +57,7 @@ class MoveInputHelper {
         this.scanner = scanner;
     }
 
+    // Lets the user input a valid move name, checks for duplicates & invalid characters
     public String inputMoveName(MoveManager manager) {
         String name;
 
@@ -79,6 +84,7 @@ class MoveInputHelper {
         return name;
     }
 
+    // Lets the user input a valid description for the move
     public String inputMoveDescription() {
         String description;
 
@@ -103,6 +109,7 @@ class MoveInputHelper {
         return description;
     }
 
+    // Lets the user choose between HM and TM
     public Move.Classification inputMoveClassification() {
         while (true) {
             System.out.print("Enter move classification (HM or TM): ");
@@ -116,6 +123,7 @@ class MoveInputHelper {
         }
     }
 
+    // Lets the user enter a move's type (e.g., Fire, Water)
     public String inputMoveTyping(String typeName) {
         while (true) {
             System.out.print("Enter " + typeName + " Type: ");
@@ -129,6 +137,7 @@ class MoveInputHelper {
         }
     }
 
+    // Optional input: asks if the move has a second type
     public String inputSecondaryMoveType(String typeName) {
         System.out.print("Does this move have a Secondary Type? (0 = No, 1 = Yes): ");
         String input = scanner.nextLine().trim();
@@ -144,6 +153,7 @@ class MoveInputHelper {
     }
 }
 
+// Manager class that handles move operations like adding, searching, viewing
 class MoveManager {
 
     private final List<Move> moveList;
@@ -156,6 +166,7 @@ class MoveManager {
         this.scanner = scanner;
     }
 
+    // Adds a new move, makes sure everything is valid
     public void addMove() {
         String name = inputHelper.inputMoveName(this);
         String description = inputHelper.inputMoveDescription();
@@ -179,6 +190,7 @@ class MoveManager {
                 " (" + newMove.getClassification() + ")");
     }
 
+     // Checks if a move name is already used
     public boolean isMoveNameTaken(String name) {
         for (Move m : moveList) {
             if (m.getName().equalsIgnoreCase(name)) {
@@ -188,28 +200,49 @@ class MoveManager {
         return false;
     }
 
+    // Displays all the moves in a clean, tabular format
     public void viewAllMovesAvailable() {
         if (moveList.isEmpty()) {
             System.out.println("\nSystem: No moves in the database.");
         } else {
             System.out.printf("%-20s %-10s %-15s %-55s\n", "Move Name", "Class", "Type(s)", "Description");
-            System.out.println("-------------------------------------------------------------------------------------------");
-
+            System.out.println("=======================================================================================================");
+    
             for (Move m : moveList) {
                 String types = m.getPrimaryType();
                 if (m.getSecondaryType() != null && !m.getSecondaryType().isEmpty()) {
                     types += "/" + m.getSecondaryType();
                 }
-
-                System.out.printf("%-20s %-10s %-15s %-55s\n",
-                        m.getName(),
-                        m.getClassification(),
-                        types,
-                        m.getDescription());
+    
+                String description = m.getDescription();
+                int descWidth = 55;
+    
+                if (description.length() <= descWidth) {
+                    System.out.printf("%-20s %-10s %-15s %-55s\n",
+                            m.getName(),
+                            m.getClassification(),
+                            types,
+                            description);
+                } else {
+                    System.out.printf("%-20s %-10s %-15s %-55s\n",
+                            m.getName(),
+                            m.getClassification(),
+                            types,
+                            description.substring(0, descWidth));
+    
+                    int start = descWidth;
+                    while (start < description.length()) {
+                        int end = Math.min(start + descWidth, description.length());
+                        String line = description.substring(start, end);
+                        System.out.printf("%-20s %-10s %-15s %-55s\n", "", "", "", line);
+                        start += descWidth;
+                    }
+                }
             }
         }
-    }
+    }    
 
+    // Shows the search menu and handles search based on user choice
     public void handleMoveSearch() {
         System.out.println("\n--- Search Pokémon Moves ---");
         System.out.println("1. By Name or Effect");
@@ -245,6 +278,7 @@ class MoveManager {
         }
     }
 
+    // Search for moves that match a keyword in name or effect
     public void searchByNameOrEffect(String keyword) {
         List<Move> results = new ArrayList<>();
         for (Move m : moveList) {
@@ -256,6 +290,7 @@ class MoveManager {
         showSearchResults(results, "Keyword: " + keyword);
     }
 
+    // Search for moves by type (either primary or secondary)
     public void searchByType(String type) {
         List<Move> results = new ArrayList<>();
         for (Move m : moveList) {
@@ -269,6 +304,7 @@ class MoveManager {
         showSearchResults(results, "Type: " + type);
     }
 
+    // Search for moves by classification (HM or TM)
     public void searchByClassification(Move.Classification classification) {
         List<Move> results = new ArrayList<>();
         for (Move m : moveList) {
@@ -279,6 +315,7 @@ class MoveManager {
         showSearchResults(results, "Classification: " + classification);
     }
 
+    // Displays the search results
     public void showSearchResults(List<Move> results, String title) {
         if (results.isEmpty()) {
             System.out.println("No moves found for " + title);
@@ -301,6 +338,7 @@ class MoveManager {
         }
     }
 
+    // Adds two default sample moves when the program starts
     public void loadDefaultMoves() {
         Move tackle = new Move("Tackle",
                 "Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.",
