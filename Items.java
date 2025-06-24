@@ -126,6 +126,15 @@ public class Items {
             System.out.printf(formatRow, item.getName(), item.getCategory(), item.getEffect());
         }
     }
+
+    public Item findItem(String heldItem) {
+        for (Item item : itemList) {
+            if (item.getName().equalsIgnoreCase(heldItem)) {
+                return item;
+            }
+        }
+        return null;
+    }
 }
 
 class Item {
