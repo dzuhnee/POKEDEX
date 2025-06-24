@@ -194,7 +194,30 @@ public class Pokemon {
         return false;
     }
 
-    // public void display() {
-    //     System.out.printf("%-4s %-12s %-15s %-9s %-15s %-30s\\n", pokedexNumber, name, );
-    // } 
+    public void display() {
+        // Displays both types if there are two
+        String types = primaryType;
+        if (secondaryType != null && !secondaryType.isEmpty()) {
+            types += "/" + secondaryType;
+        }
+
+        // Displays 'None' if Pokemon is not holding an item
+        String item;
+        if (heldItem != null) {
+            item = heldItem.getName();
+        } else {
+            item = "None";
+        }
+
+        // Displays the move set separated by commas
+        String moves = "";
+        for (int i = 0; i < moveSet.size(); i++) {
+            moves += moveSet.get(i).getName();
+            if (i != moveSet.size() - 1) {
+                moves += ", ";
+            }
+        }
+
+        System.out.printf("%-4d %-12s %-15s %-9d %-15s %-30s\n", pokedexNumber, name, types, baseLevel, item, moves);
+    }
 }
