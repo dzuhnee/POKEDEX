@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Pokemon {
     private String pokedexNumber;
@@ -215,5 +216,18 @@ class PokemonBaseStats {
      */
     public int getTotal() {
         return hp + attack + defense + spAttack + spDefense + speed;
+    }
+
+    public static int readValidBaseStat(Scanner scan, String attribute) {
+        int input;
+
+        do {
+            input = PokemonManager.readValidInt(scan, attribute);
+            if (input < 1 || input > 255) {
+                System.out.println(attribute + " must be between 1-255 only!");
+            }
+        } while (input < 1 || input > 255);
+
+        return input;
     }
 }

@@ -35,7 +35,13 @@ public class PokemonManager {
 
         // Type 2
         System.out.print("Does " + name + " has a secondary type? [Y/N]: ");
-        String choice = scan.nextLine();
+        String choice;
+        do {
+            choice = scan.nextLine();
+            if (!choice.equalsIgnoreCase("Y") && !choice.equalsIgnoreCase("N")) {
+                System.out.print("Invalid input. Please try again: ");
+            }
+        } while (!choice.equalsIgnoreCase("Y") && !choice.equalsIgnoreCase("N"));
         if (choice.equalsIgnoreCase("Y")) {
             do {
                 secondaryType = readValidString(scan, "secondary type", "[A-Za-z\\s]+");
@@ -44,12 +50,12 @@ public class PokemonManager {
 
         // Base Stats
         System.out.printf("\nEnter the Base Stats\n");
-        hp = readValidInt(scan, "HP");
-        attack = readValidInt(scan, "Attack");
-        defense = readValidInt(scan, "Defense");
-        spAttack = readValidInt(scan, "Special Attack");
-        spDefense = readValidInt(scan, "Special Defense");
-        speed = readValidInt(scan, "Speed");
+        hp = PokemonBaseStats.readValidBaseStat(scan, "HP");
+        attack = PokemonBaseStats.readValidBaseStat(scan, "Attack");
+        defense = PokemonBaseStats.readValidBaseStat(scan, "Defense");
+        spAttack = PokemonBaseStats.readValidBaseStat(scan, "Special Attack");
+        spDefense = PokemonBaseStats.readValidBaseStat(scan, "Special Defense");
+        speed = PokemonBaseStats.readValidBaseStat(scan, "Speed");
 
         // Instantiate
         Pokemon pokemon;
@@ -64,8 +70,15 @@ public class PokemonManager {
                     hp, attack, defense, spAttack, spDefense, speed);
         }
 
+        String c;
         System.out.print(name + " is ready to join! Add to your Pokémon [Y/N]: ");
-        String c = scan.nextLine();
+        do {
+            c = scan.nextLine();
+            if (!c.equalsIgnoreCase("Y") && !c.equalsIgnoreCase("N")) {
+                System.out.print("Invalid input. Please try again: ");
+            }
+        } while (!c.equalsIgnoreCase("Y") && !c.equalsIgnoreCase("N"));
+
         if (c.equalsIgnoreCase("Y")) {
             pokemons.add(pokemon);
             System.out.println("Pokemon \"" + name + "\" added successfully!");
@@ -211,7 +224,7 @@ public class PokemonManager {
     }
 
     // Helper function for int input
-    private static int readValidInt(Scanner scan, String attribute) {
+    public static int readValidInt(Scanner scan, String attribute) {
         int input;
 
         while (true) {
