@@ -2,7 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// This class represents a single Pokémon item
+/**
+ * Represents a single Pokémon item with attributes such as name, category, 
+ * description, effect, buying/selling price, and stock quantity.
+ */
 public class Item {
     // These are the properties of the item
     private final int buyingPrice;
@@ -13,7 +16,17 @@ public class Item {
     private final int sellingPrice;
     private int stock;
 
-    // Constructor: sets all the values when an item is created
+    /**
+     * Constructs an Item with all necessary properties.
+     * 
+     * @param name the name of the item
+     * @param category the category of the item (e.g., Vitamin, Feather)
+     * @param description a short description of the item
+     * @param effect the effect it has on Pokémon
+     * @param buyingPrice price to buy the item
+     * @param sellingPrice price to sell the item
+     * @param stock initial stock quantity
+     */
     public Item(String name, String category, String description, String effect,
                 int buyingPrice, int sellingPrice, int stock) {
         this.name = name;
@@ -26,54 +39,76 @@ public class Item {
     }
 
     // Getters
+
+    /** @return the name of the item */
     public String getName() {
         return name;
     }
 
+    /** @return the category of the item */
     public String getCategory() {
         return category;
     }
 
+    /** @return the description of the item */
     public String getDescription() {
         return description;
     }
 
+    /** @return the effect the item has */
     public String getEffect() {
         return effect;
     }
 
+    /** @return the buying price of the item */
     public int getBuyingPrice() {
         return buyingPrice;
     }
 
+    /** @return the selling price of the item */
     public int getSellingPrice() {
         return sellingPrice;
     }
 
+    /** @return the current stock quantity */
     public int getStock() {
         return stock;
     }
 
-    // Setter
+    /**
+     * Sets the stock value for the item.
+     * 
+     * @param stock the new stock quantity
+     */
     public void setStock(int stock) {
         this.stock = stock;
     }
 }
 
-// This class manages a whole list of items
+/**
+ * Manages a collection of Pokémon items and provides functionality
+ * for viewing, searching, and retrieving items.
+ */
 class Items {
 
     private final Scanner scanner; // For taking user input
     private final List<Item> itemList; // List to store all the item objects
 
-    // Constructor: initializes the list and adds default items
+    /**
+     * Constructs the Items manager and populates it with default items.
+     * 
+     * @param scanner the Scanner object for user input
+     */
     public Items(final Scanner scanner) {
         itemList = new ArrayList<>();
         populateInitialItems();
         this.scanner = scanner;
     }
 
-    // Adds sample items to the database (vitamins, feathers, stones, etc.)
+    /**
+     * Populates the item list with predefined sample items.
+     * Includes Vitamins, Feathers, Leveling Items, and Evolution Stones.
+     */
     public void populateInitialItems() {
         // Vitamins (boost EVs)
         itemList.add(new Item("Calcium", "Vitamin", "A nutritious drink for Pokémon.", "+10 Special Attack EVs", 10000, 5000, 10));
@@ -107,7 +142,9 @@ class Items {
         itemList.add(new Item("Ice Stone", "Evolution Stone", "Cold to the touch.", "Evolves Alolan Vulpix, etc.", 3000, 1500, 10));
     }
 
-    // Displays all items
+    /**
+     * Displays all available items in a formatted list.
+     */
     public void viewAllItemsAvailable() {
         if (itemList.isEmpty()) {
             System.out.println("\nSystem: No items in the database.");
@@ -145,7 +182,10 @@ class Items {
         }
     }    
 
-    // Menu to handle search options (by name/effect or by category)
+    /**
+     * Displays a menu to let the user choose a search option.
+     * Allows searching by item name/effect or by category.
+     */
     public void handleItemSearch() {
         System.out.println("\n--- Search Pokémon Items ---");
         System.out.printf("%-5s %-30s%n", "1.", "By Name or Effect");
@@ -173,7 +213,11 @@ class Items {
         }
     }
 
-    // Searches for items by name or by their effect text
+    /**
+     * Searches items by their name or effect using a keyword.
+     * 
+     * @param keyword the search keyword entered by the user
+     */
     public void searchItemsByNameOrEffect(String keyword) {
         List<Item> results = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
@@ -187,7 +231,11 @@ class Items {
         showItemSearchResults(results, "Name/Effect contains: " + keyword);
     }
 
-    // Searches for items by their category (Vitamin, Feather, etc.)
+    /**
+     * Searches items by category (e.g., Vitamin, Feather).
+     * 
+     * @param category the category name to search
+     */
     public void searchByCategory(String category) {
         List<Item> results = new ArrayList<>();
         for (Item item : itemList) {
@@ -198,7 +246,12 @@ class Items {
         showItemSearchResults(results, "Category: " + category);
     }
 
-    // Show item results
+    /**
+     * Displays the search results in a tabular format.
+     * 
+     * @param results the list of matching items
+     * @param title   a title to indicate the search context
+     */
     private void showItemSearchResults(List<Item> results, String title) {
         if (results.isEmpty()) {
             System.out.println("No items found for " + title);
@@ -216,7 +269,12 @@ class Items {
         }
     }
 
-    // Fetches the item
+    /**
+     * Finds and returns an item by its name (case-insensitive).
+     * 
+     * @param heldItem the name of the item to find
+     * @return the Item if found, or null otherwise
+     */
     public Item findItem(String heldItem) {
         for (Item item : itemList) {
             if (item.getName().equalsIgnoreCase(heldItem)) {
