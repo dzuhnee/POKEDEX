@@ -1,9 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Pokemon {
-    private int pokedexNumber;
+    private String pokedexNumber;
     private String name;
     private String primaryType;
     private String secondaryType;
@@ -16,8 +15,10 @@ public class Pokemon {
     private PokemonBaseStats baseStats;
 
     // Constructor for dual-type Pokemon
-    public Pokemon(int pokedexNumber, String name, String primaryType, String secondaryType, int baseLevel,
-            int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int attack, int defense, int speed) {
+    public Pokemon(String pokedexNumber, String name, String primaryType, String secondaryType, int baseLevel,
+            int evolvesFrom,
+            int evolvesTo, int evolutionLevel, int hp, int attack, int defense, int spAttack, int spDefense,
+            int speed) {
         this.pokedexNumber = pokedexNumber;
         this.name = name;
         this.primaryType = primaryType;
@@ -26,24 +27,24 @@ public class Pokemon {
         this.evolvesFrom = evolvesFrom;
         this.evolvesTo = evolvesTo;
         this.evolutionLevel = evolutionLevel;
-        this.baseStats = new PokemonBaseStats(hp, attack, defense, speed);
+        this.baseStats = new PokemonBaseStats(hp, attack, defense, spAttack, spDefense, speed);
 
         this.heldItem = null;
         this.moveSet = new ArrayList<>();
     }
 
     // Constructor for single-type Pokemon
-    public Pokemon(int pokedexNumber, String name, String primaryType, int baseLevel, int evolvesFrom, int evolvesTo,
-            int evolutionLevel, int hp, int attack, int defense, int speed) {
+    public Pokemon(String pokedexNumber, String name, String primaryType, int baseLevel, int evolvesFrom, int evolvesTo,
+            int evolutionLevel, int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
         this(pokedexNumber, name, primaryType, null, baseLevel, evolvesFrom, evolvesTo, evolutionLevel,
-                hp, attack, defense, speed);
+                hp, attack, defense, spAttack, spDefense, speed);
     }
 
     public String getName() {
         return name;
     }
 
-    public int getPokedexNumber() {
+    public String getPokedexNumber() {
         return pokedexNumber;
     }
 
@@ -83,6 +84,14 @@ public class Pokemon {
         return baseStats.getDefense();
     }
 
+    public int getSpecialAttack() {
+        return baseStats.getSpecialAttack();
+    }
+
+    public int getSpecialDefense() {
+        return baseStats.getSpecialDefense();
+    }
+
     public int getSpeed() {
         return baseStats.getSpeed();
     }
@@ -95,103 +104,8 @@ public class Pokemon {
         return heldItem;
     }
 
-    public void setBaseLevel(int baseLevel) {
-        if (baseLevel >= 0) {
-            this.baseLevel = baseLevel;
-        } else {
-            System.out.println("Base level cannot be negative.");
-        }
-    }
-
-    public void setHeldItem(Item heldItem) {
-        Item oldItem = this.heldItem; // to store the current item before changing
-        this.heldItem = heldItem; // update to the new one
-
-        if (heldItem == null) {
-            if (oldItem != null) {
-                System.out.println(this.name + " is no longer holding " + oldItem.getName() + ".");
-            } else {
-                System.out.println(this.name + " is not holding an item.");
-            }
-        } else {
-            if (oldItem != null) {
-                System.out.println(this.name + " unequipped " + oldItem.getName() + " and is now holding "
-                        + heldItem.getName() + ".");
-            } else {
-                System.out.println(this.name + " is now holding " + heldItem.getName() + ".");
-            }
-        }
-    }
-
-    public boolean learnMove(Move move) {
-        // Check if type is compatible
-        if (!isTypeCompatible(move)) {
-            System.out.println(this.name + " can't learn " + move.getName() + " because type is incompatible!");
-            return false;
-        }
-
-        // Check if move is in the set already
-        if (this.moveSet.contains(move)) {
-            System.out.println(this.name + " already knows " + move.getName() + ".");
-            return false;
-        }
-
-        // Check if adding a new move will exceed the limit
-        if (this.moveSet.size() < 4) {
-            this.moveSet.add(move);
-            System.out.println(move.getName() + " learned successfully!");
-            return true;
-        } else {
-            System.out.println(this.name
-                    + " already knows 4 moves! A move must be forgotten to learn a new one unless it's an HM.");
-            System.out.print("Current moves: ");
-            for (Move m : moveSet) {
-                System.out.print(m.getName() + " ");
-            }
-            System.out.println();
-            return false;
-        }
-    }
-
-    public void forgetMove(Move move) {
-        if (!moveSet.contains(move)) {
-            System.out.println(name + " does not know " + move.getName() + ".");
-            return;
-        }
-
-        if (move.getClassification() == Move.Classification.HM) {
-            System.out.println(move.getName() + " is an HM move and cannot be forgotten.");
-        } else {
-            moveSet.remove(move);
-            System.out.println(move.getName() + " has been forgotten by " + name + ".");
-        }
-    }
-
     public void cry() {
         System.out.println(this.name + " cries!");
-    }
-
-    // Helper Method
-    private boolean isTypeCompatible(Move move) {
-        // Check Type 1
-        if (this.primaryType != null && this.primaryType.equalsIgnoreCase(move.getPrimaryType())) {
-            return true;
-        }
-        if (this.primaryType != null && move.getSecondaryType() != null
-                && this.primaryType.equalsIgnoreCase(move.getSecondaryType())) {
-            return true;
-        }
-
-        // Check Type 2 (if it exists!)
-        if (this.secondaryType != null && this.secondaryType.equalsIgnoreCase(move.getPrimaryType())) {
-            return true;
-        }
-        if (this.secondaryType != null && move.getSecondaryType() != null
-                && this.secondaryType.equalsIgnoreCase(move.getSecondaryType())) {
-            return true;
-        }
-
-        return false;
     }
 
     public void display() {
@@ -201,23 +115,105 @@ public class Pokemon {
             types += "/" + secondaryType;
         }
 
-        // Displays 'None' if Pokemon is not holding an item
-        String item;
-        if (heldItem != null) {
-            item = heldItem.getName();
-        } else {
-            item = "None";
-        }
+        System.out.printf("%-6s %-12s %-15s %-7d %-5d %-7d %-8d %-9d %-9d %-6d\n", pokedexNumber, name, types,
+                baseStats.getTotal(), baseStats.getHP(), baseStats.getAttack(), baseStats.getDefense(),
+                baseStats.getSpecialAttack(), baseStats.getSpecialDefense(), baseStats.getSpeed());
+    }
+}
 
-        // Displays the move set separated by commas
-        String moves = "";
-        for (int i = 0; i < moveSet.size(); i++) {
-            moves += moveSet.get(i).getName();
-            if (i != moveSet.size() - 1) {
-                moves += ", ";
-            }
-        }
+/**
+ * This class epresents the base stats of a Pokémon, including HP, Attack,
+ * Defense, Special Attack,
+ * Special Defense, and Speed.
+ */
+class PokemonBaseStats {
+    private int hp;
+    private int attack;
+    private int defense;
+    private int spAttack;
+    private int spDefense;
+    private int speed;
 
-        System.out.printf("%-4d %-12s %-15s %-9d %-15s %-30s\n", pokedexNumber, name, types, baseLevel, item, moves);
+    /**
+     * Constructs a PokemonBaseStats object with the given base stat values.
+     *
+     * @param hp        the base HP (Hit Points) stat of the Pokémon
+     * @param attack    the base Attack stat of the Pokémon
+     * @param defense   the base Defense stat of the Pokémon
+     * @param spAttack  the base Special Attack stat of the Pokémon
+     * @param spDefense the base Special Defense stat of the Pokémon
+     * @param speed     the base Speed stat of the Pokémon
+     */
+    public PokemonBaseStats(int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
+        this.hp = hp;
+        this.attack = attack;
+        this.defense = defense;
+        this.spAttack = spAttack;
+        this.spDefense = spDefense;
+        this.speed = speed;
+    }
+
+    /**
+     * Gets the base HP stat.
+     *
+     * @return the base HP value
+     */
+    public int getHP() {
+        return hp;
+    }
+
+    /**
+     * Gets the base Attack stat.
+     *
+     * @return the base Attack value
+     */
+    public int getAttack() {
+        return attack;
+    }
+
+    /**
+     * Gets the base Defense stat.
+     *
+     * @return the base Defense value
+     */
+    public int getDefense() {
+        return defense;
+    }
+
+    /**
+     * Gets the base Special Attack stat.
+     *
+     * @return the base Special Attack value
+     */
+    public int getSpecialAttack() {
+        return spAttack;
+    }
+
+    /**
+     * Gets the base Special Defense stat.
+     *
+     * @return the base Special Defense value
+     */
+    public int getSpecialDefense() {
+        return spDefense;
+    }
+
+    /**
+     * Gets the base Speed stat.
+     *
+     * @return the base Speed value
+     */
+    public int getSpeed() {
+        return speed;
+    }
+
+    /**
+     * Calculates and returns the total of all base stats.
+     *
+     * @return the total of HP, Attack, Defense, Special Attack, Special Defense,
+     *         and Speed
+     */
+    public int getTotal() {
+        return hp + attack + defense + spAttack + spDefense + speed;
     }
 }
