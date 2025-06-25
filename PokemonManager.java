@@ -9,30 +9,25 @@ public class PokemonManager {
 
     public boolean addPokemon() {
         // Variables to store data temporarily
-        int pokedexNumber;
+        String pokedexNumber;
         String name;
         String primaryType = null;
         String secondaryType = null;
-        int baseLevel;
-        int evolvesFrom, evolvesTo, evolutionLevel;
-        // List<Move> moveSet;
-        Item heldItem;
-        int hp, defense, attack, speed;
+        int hp, defense, spDefense, attack, spAttack, speed;
 
         // Get user input
         System.out.printf("\n--- Add Pokémon ---\n");
         System.out.println("");
 
+        // Pokedex Number
+       
+        do {
+            pokedexNumber = readValidString(scan,
+                "Pokédex number (format as 4 digits with leading zeros, e.g., 0001)", "^\\d{4}$");
+        } while (!isUnique(pokedexNumber));
+
         // Name
         name = readValidString(scan, "name", "[A-Za-z\\s]+");
-
-        // Pokedex Number
-        pokedexNumber = readValidInt(scan, "pokedex number");
-        // for (Pokemon p : pokemons) {
-        //     if (p.getPokedexNumber() == pokedexNumber) {
-
-        //     }
-        // }
 
         // Type 1
         primaryType = readValidString(scan, "primary type", "[A-Za-z\\s]+");
@@ -45,45 +40,26 @@ public class PokemonManager {
             secondaryType = readValidString(scan, "secondary type", "[A-Za-z\\s]+");
         }
 
-        // Base Level
-        baseLevel = readValidInt(scan, "base level");
-
-        // Evolve From
-        evolvesFrom = readValidInt(scan, "evolves from");
-
-        // Evolve To
-        evolvesTo = readValidInt(scan, "evolves to");
-
-        // Evolution Level
-        evolutionLevel = readValidInt(scan, "evolution level");
-
-        // Held Item
-        String itemName = readValidString(scan, "held item (or enter 'none')", "[A-Za-z\\s]+");
-        if (!itemName.equalsIgnoreCase("none")) {
-            heldItem = items.findItem(itemName);
-
-            if (heldItem == null) {
-                System.out.println("Item is not on the list. Pokémon will hold nothing.");
-            }
-        }
-
         // Base Stats
-        System.out.println("Enter the base stats:");
+        System.out.printf("\nEnter the Base Stats\n");
         hp = readValidInt(scan, "HP");
         attack = readValidInt(scan, "Attack");
         defense = readValidInt(scan, "Defense");
+        spAttack = readValidInt(scan, "Special Attack");
+        spDefense = readValidInt(scan, "Special Defense");
         speed = readValidInt(scan, "Speed");
 
         // Instantiate
         Pokemon pokemon;
 
         // if there are two types
+        // 0 muna iba bcs di pa ata need for now
         if (secondaryType != null) {
-            pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, baseLevel, evolvesFrom, evolvesTo,
-                    evolutionLevel, baseLevel, attack, defense, speed);
+            pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, 0, 0, 0,
+                    0, hp, attack, defense, spAttack, spDefense, speed);
         } else {
-            pokemon = new Pokemon(pokedexNumber, name, primaryType, baseLevel, evolvesFrom, evolvesTo, evolutionLevel,
-                    baseLevel, attack, defense, speed);
+            pokemon = new Pokemon(pokedexNumber, name, primaryType, 0, 0, 0, 0,
+                    hp, attack, defense, spAttack, spDefense, speed);
         }
 
         System.out.print(name + " is ready to join! Add to your Pokémon [Y/N]: ");
@@ -104,8 +80,7 @@ public class PokemonManager {
         }
 
         divider();
-        System.out.printf("%-4s %-12s %-15s %-9s %-15s %-30s\n", "#", "Name", "Type(s)", "Base Lv", "Held Item",
-                "Moves");
+        header();
         divider();
         for (Pokemon p : pokemons) {
             p.display();
@@ -120,8 +95,7 @@ public class PokemonManager {
         for (Pokemon p : pokemons) {
             if (p.getName().toLowerCase().contains(s.toLowerCase())) {
                 divider();
-                System.out.printf("%-4s %-12s %-15s %-9s %-15s %-30s\n", "#", "Name", "Type(s)", "Base Lv", "Held Item",
-                        "Moves");
+                header();
                 divider();
                 p.display();
                 isFound = true;
@@ -143,8 +117,7 @@ public class PokemonManager {
             if (p.getPrimaryType().toLowerCase().contains(s.toLowerCase())
                     || p.getSecondaryType().toLowerCase().contains(s.toLowerCase())) {
                 divider();
-                System.out.printf("%-4s %-12s %-15s %-9s %-15s %-30s\n", "#", "Name", "Type(s)", "Base Lv", "Held Item",
-                        "Moves");
+                header();
                 divider();
                 p.display();
                 matchesPrimary = true;
@@ -159,13 +132,12 @@ public class PokemonManager {
         System.out.println("");
     }
 
-    public void searchByPokedexNumber(int n) {
+    public void searchByPokedexNumber(String n) {
         boolean isFound = false;
         for (Pokemon p : pokemons) {
-            if (p.getPokedexNumber() == n) {
+            if (p.getPokedexNumber().equalsIgnoreCase(n)) {
                 divider();
-                System.out.printf("%-4s %-12s %-15s %-9s %-15s %-30s\n", "#", "Name", "Type(s)", "Base Lv", "Held Item",
-                        "Moves");
+                header();
                 divider();
                 p.display();
                 isFound = true;
@@ -201,13 +173,24 @@ public class PokemonManager {
                 break;
             case "3":
                 System.out.print("Enter pokedex number: ");
-                int num = scan.nextInt();
+                String num = scan.nextLine();
                 searchByPokedexNumber(num);
                 break;
             default:
                 System.out.println("Invalid option.");
         }
     }
+
+    // Helper function to ensure pokedex numbers are unique
+    private boolean isUnique(String pokedexNumber) {
+            for (Pokemon p : pokemons) {
+                if (p.getPokedexNumber().equalsIgnoreCase(pokedexNumber)) {
+                    System.out.println("This Pokédex number already exists!");
+                    return false;
+                }
+            }
+            return true;
+        } 
 
     // Helper function for string input
     public static String readValidString(Scanner scan, String attribute, String regex) {
@@ -242,7 +225,14 @@ public class PokemonManager {
     }
 
     private static void divider() {
-        System.out.println("--------------------------------------------------------------------------------------");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------");
+    }
+
+    private static void header() {
+        System.out.printf("%-6s %-12s %-15s %-7s %-5s %-7s %-8s %-9s %-9s %-6s\n", "#", "Name", "Type(s)", "Total",
+                "HP",
+                "Attack", "Defense", "Sp.Atk", "Sp.Def", "Speed");
     }
 
 }
