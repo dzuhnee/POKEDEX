@@ -20,24 +20,26 @@ public class PokemonManager {
         System.out.println("");
 
         // Pokedex Number
-       
         do {
             pokedexNumber = readValidString(scan,
-                "Pokédex number (format as 4 digits with leading zeros, e.g., 0001)", "^\\d{4}$");
+                    "Pokédex number (format as 4 digits with leading zeros, e.g., 0001)", "^\\d{4}$");
         } while (!isUnique(pokedexNumber));
 
         // Name
         name = readValidString(scan, "name", "[A-Za-z\\s]+");
 
         // Type 1
-        primaryType = readValidString(scan, "primary type", "[A-Za-z\\s]+");
+        do {
+            primaryType = readValidString(scan, "primary type", "[A-Za-z\\s]+");
+        } while (!TypeUtils.isValidType(primaryType));
 
-        // If (there's a type 2)
         // Type 2
         System.out.print("Does " + name + " has a secondary type? [Y/N]: ");
         String choice = scan.nextLine();
         if (choice.equalsIgnoreCase("Y")) {
-            secondaryType = readValidString(scan, "secondary type", "[A-Za-z\\s]+");
+            do {
+                secondaryType = readValidString(scan, "secondary type", "[A-Za-z\\s]+");
+            } while (!TypeUtils.isValidType(secondaryType));
         }
 
         // Base Stats
@@ -183,14 +185,14 @@ public class PokemonManager {
 
     // Helper function to ensure pokedex numbers are unique
     private boolean isUnique(String pokedexNumber) {
-            for (Pokemon p : pokemons) {
-                if (p.getPokedexNumber().equalsIgnoreCase(pokedexNumber)) {
-                    System.out.println("This Pokédex number already exists!");
-                    return false;
-                }
+        for (Pokemon p : pokemons) {
+            if (p.getPokedexNumber().equalsIgnoreCase(pokedexNumber)) {
+                System.out.println("This Pokédex number already exists!");
+                return false;
             }
-            return true;
-        } 
+        }
+        return true;
+    }
 
     // Helper function for string input
     public static String readValidString(Scanner scan, String attribute, String regex) {
