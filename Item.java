@@ -89,7 +89,7 @@ public class Item {
  * Manages a collection of Pokémon items and provides functionality
  * for viewing, searching, and retrieving items.
  */
-class Items {
+class ItemManager {
 
     private final Scanner scanner; // For taking user input
     private final List<Item> itemList; // List to store all the item objects
@@ -99,7 +99,7 @@ class Items {
      * 
      * @param scanner the Scanner object for user input
      */
-    public Items(final Scanner scanner) {
+    public ItemManager(final Scanner scanner) {
         itemList = new ArrayList<>();
         populateInitialItems();
         this.scanner = scanner;

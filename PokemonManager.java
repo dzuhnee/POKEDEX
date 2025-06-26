@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class PokemonManager {
     Scanner scan = new Scanner(System.in);
     List<Pokemon> pokemons = new ArrayList<>();
-    Items items = new Items(scan);
+    ItemManager itemManager = new ItemManager(scan);
 
      /**
      * Prompts the user to input Pokémon details and adds it to the list if confirmed.

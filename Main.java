@@ -20,7 +20,7 @@ public class Main {
 
         // Initialize Managers
         PokemonManager pokemonManager = new PokemonManager();
-        Items itemManager = new Items(scan);
+        ItemManager itemManager = new ItemManager(scan);
         MoveManager moveManager = new MoveManager(scan);
         moveManager.loadDefaultMoves();
 
