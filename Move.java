@@ -94,7 +94,7 @@ class MoveInputHelper {
         String name;
 
         while (true) {
-            System.out.print("Enter Move Name: ");
+            System.out.print("Enter move name: ");
             String input = scanner.nextLine().trim();
 
             if (input.isEmpty()) {
@@ -171,7 +171,7 @@ class MoveInputHelper {
      */
     public String inputMoveTyping(String typeName) {
         while (true) {
-            System.out.print("Enter " + typeName + " Type: ");
+            System.out.print("Enter " + typeName + " type: ");
             String input = scanner.nextLine().trim().toLowerCase();
 
             if (TypeUtils.isValidType(input)) {

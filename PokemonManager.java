@@ -139,12 +139,13 @@ public class PokemonManager {
         boolean matchesPrimary = false;
         boolean matchesSecondary = false;
 
+        divider();
+        header();
+        divider();
+
         for (Pokemon p : pokemons) {
             if (p.getPrimaryType().toLowerCase().contains(s.toLowerCase())
                     || p.getSecondaryType().toLowerCase().contains(s.toLowerCase())) {
-                divider();
-                header();
-                divider();
                 p.display();
                 matchesPrimary = true;
                 matchesSecondary = true;
@@ -160,11 +161,13 @@ public class PokemonManager {
 
     public void searchByPokedexNumber(String n) {
         boolean isFound = false;
+
+        divider();
+        header();
+        divider();
+
         for (Pokemon p : pokemons) {
             if (p.getPokedexNumber().equalsIgnoreCase(n)) {
-                divider();
-                header();
-                divider();
                 p.display();
                 isFound = true;
             }
@@ -181,7 +184,7 @@ public class PokemonManager {
         System.out.println("\n--- Search Pokémon ---");
         System.out.println("1. By Name");
         System.out.println("2. By Type");
-        System.out.println("3. By Pokedex Number");
+        System.out.println("3. By Pokédex Number");
         System.out.print("Enter option: ");
 
         String option = scan.nextLine();
@@ -198,7 +201,7 @@ public class PokemonManager {
                 searchByType(type);
                 break;
             case "3":
-                System.out.print("Enter pokedex number: ");
+                System.out.print("Enter Pokédex number (must be 4 digits): ");
                 String num = scan.nextLine();
                 searchByPokedexNumber(num);
                 break;
