@@ -11,6 +11,7 @@ public class TypeUtils {
                 return true;
             }
         }
+        System.out.println(type + " is not a type!");
         return false;
     }
 

@@ -1,5 +1,5 @@
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class PokemonManager {
@@ -7,87 +7,83 @@ public class PokemonManager {
     List<Pokemon> pokemons = new ArrayList<>();
     Items items = new Items(scan);
 
+     /**
+     * Prompts the user to input Pokémon details and adds it to the list if confirmed.
+     *
+     * @return true if the Pokémon was added, false otherwise
+     */
     public boolean addPokemon() {
         // Variables to store data temporarily
-        int pokedexNumber;
+        String pokedexNumber;
         String name;
         String primaryType = null;
         String secondaryType = null;
-        int baseLevel;
-        int evolvesFrom, evolvesTo, evolutionLevel;
-        // List<Move> moveSet;
-        Item heldItem;
-        int hp, defense, attack, speed;
+        int hp, defense, spDefense, attack, spAttack, speed;
 
         // Get user input
         System.out.printf("\n--- Add Pokémon ---\n");
         System.out.println("");
 
+        // Pokedex Number
+        do {
+            pokedexNumber = readValidString(scan,
+                    "Pokédex number (format as 4 digits with leading zeros, e.g., 0001)", "^\\d{4}$");
+        } while (!isUnique(pokedexNumber));
+
         // Name
         name = readValidString(scan, "name", "[A-Za-z\\s]+");
 
-        // Pokedex Number
-        pokedexNumber = readValidInt(scan, "pokedex number");
-        // for (Pokemon p : pokemons) {
-        //     if (p.getPokedexNumber() == pokedexNumber) {
-
-        //     }
-        // }
-
         // Type 1
-        primaryType = readValidString(scan, "primary type", "[A-Za-z\\s]+");
+        do {
+            primaryType = readValidString(scan, "primary type", "[A-Za-z\\s]+");
+        } while (!TypeUtils.isValidType(primaryType));
 
-        // If (there's a type 2)
         // Type 2
         System.out.print("Does " + name + " has a secondary type? [Y/N]: ");
-        String choice = scan.nextLine();
-        if (choice.equalsIgnoreCase("Y")) {
-            secondaryType = readValidString(scan, "secondary type", "[A-Za-z\\s]+");
-        }
-
-        // Base Level
-        baseLevel = readValidInt(scan, "base level");
-
-        // Evolve From
-        evolvesFrom = readValidInt(scan, "evolves from");
-
-        // Evolve To
-        evolvesTo = readValidInt(scan, "evolves to");
-
-        // Evolution Level
-        evolutionLevel = readValidInt(scan, "evolution level");
-
-        // Held Item
-        String itemName = readValidString(scan, "held item (or enter 'none')", "[A-Za-z\\s]+");
-        if (!itemName.equalsIgnoreCase("none")) {
-            heldItem = items.findItem(itemName);
-
-            if (heldItem == null) {
-                System.out.println("Item is not on the list. Pokémon will hold nothing.");
+        String choice;
+        do {
+            choice = scan.nextLine();
+            if (!choice.equalsIgnoreCase("Y") && !choice.equalsIgnoreCase("N")) {
+                System.out.print("Invalid input. Please try again: ");
             }
+        } while (!choice.equalsIgnoreCase("Y") && !choice.equalsIgnoreCase("N"));
+        if (choice.equalsIgnoreCase("Y")) {
+            do {
+                secondaryType = readValidString(scan, "secondary type", "[A-Za-z\\s]+");
+            } while (!TypeUtils.isValidType(secondaryType));
         }
 
         // Base Stats
-        System.out.println("Enter the base stats:");
-        hp = readValidInt(scan, "HP");
-        attack = readValidInt(scan, "Attack");
-        defense = readValidInt(scan, "Defense");
-        speed = readValidInt(scan, "Speed");
+        System.out.printf("\nEnter the Base Stats\n");
+        hp = PokemonBaseStats.readValidBaseStat(scan, "HP");
+        attack = PokemonBaseStats.readValidBaseStat(scan, "Attack");
+        defense = PokemonBaseStats.readValidBaseStat(scan, "Defense");
+        spAttack = PokemonBaseStats.readValidBaseStat(scan, "Special Attack");
+        spDefense = PokemonBaseStats.readValidBaseStat(scan, "Special Defense");
+        speed = PokemonBaseStats.readValidBaseStat(scan, "Speed");
 
         // Instantiate
         Pokemon pokemon;
 
         // if there are two types
+        // 0 muna iba bcs di pa ata need for now
         if (secondaryType != null) {
-            pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, baseLevel, evolvesFrom, evolvesTo,
-                    evolutionLevel, baseLevel, attack, defense, speed);
+            pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, 0, 0, 0,
+                    0, hp, attack, defense, spAttack, spDefense, speed);
         } else {
-            pokemon = new Pokemon(pokedexNumber, name, primaryType, baseLevel, evolvesFrom, evolvesTo, evolutionLevel,
-                    baseLevel, attack, defense, speed);
+            pokemon = new Pokemon(pokedexNumber, name, primaryType, 0, 0, 0, 0,
+                    hp, attack, defense, spAttack, spDefense, speed);
         }
 
+        String c;
         System.out.print(name + " is ready to join! Add to your Pokémon [Y/N]: ");
-        String c = scan.nextLine();
+        do {
+            c = scan.nextLine();
+            if (!c.equalsIgnoreCase("Y") && !c.equalsIgnoreCase("N")) {
+                System.out.print("Invalid input. Please try again: ");
+            }
+        } while (!c.equalsIgnoreCase("Y") && !c.equalsIgnoreCase("N"));
+
         if (c.equalsIgnoreCase("Y")) {
             pokemons.add(pokemon);
             System.out.println("Pokemon \"" + name + "\" added successfully!");
@@ -97,6 +93,9 @@ public class PokemonManager {
         return false;
     }
 
+    /**
+     * Displays all Pokémon currently stored in the database.
+     */
     public void displayAllPokemons() {
         if (pokemons.isEmpty()) {
             System.out.println("No Pokémon in the database.");
@@ -104,8 +103,7 @@ public class PokemonManager {
         }
 
         divider();
-        System.out.printf("%-4s %-12s %-15s %-9s %-15s %-30s\n", "#", "Name", "Type(s)", "Base Lv", "Held Item",
-                "Moves");
+        header();
         divider();
         for (Pokemon p : pokemons) {
             p.display();
@@ -114,14 +112,18 @@ public class PokemonManager {
         System.out.println("");
     }
 
+    /**
+     * Searches for Pokémon whose names contain the specified keyword (case-insensitive).
+     *
+     * @param s the name or part of the name to search for
+     */
     public void searchByName(String s) {
         boolean isFound = false;
 
         for (Pokemon p : pokemons) {
             if (p.getName().toLowerCase().contains(s.toLowerCase())) {
                 divider();
-                System.out.printf("%-4s %-12s %-15s %-9s %-15s %-30s\n", "#", "Name", "Type(s)", "Base Lv", "Held Item",
-                        "Moves");
+                header();
                 divider();
                 p.display();
                 isFound = true;
@@ -135,6 +137,11 @@ public class PokemonManager {
         System.out.println("");
     }
 
+     /**
+     * Searches for Pokémon by their primary or secondary type.
+     *
+     * @param s the type name to search for (case-insensitive)
+     */
     public void searchByType(String s) {
         boolean matchesPrimary = false;
         boolean matchesSecondary = false;
@@ -143,8 +150,7 @@ public class PokemonManager {
             if (p.getPrimaryType().toLowerCase().contains(s.toLowerCase())
                     || p.getSecondaryType().toLowerCase().contains(s.toLowerCase())) {
                 divider();
-                System.out.printf("%-4s %-12s %-15s %-9s %-15s %-30s\n", "#", "Name", "Type(s)", "Base Lv", "Held Item",
-                        "Moves");
+                header();
                 divider();
                 p.display();
                 matchesPrimary = true;
@@ -159,13 +165,17 @@ public class PokemonManager {
         System.out.println("");
     }
 
-    public void searchByPokedexNumber(int n) {
+    /**
+     * Searches for Pokémon by their Pokédex number.
+     *
+     * @param n the 4-digit Pokédex number as a string
+     */
+    public void searchByPokedexNumber(String n) {
         boolean isFound = false;
         for (Pokemon p : pokemons) {
-            if (p.getPokedexNumber() == n) {
+            if (p.getPokedexNumber().equalsIgnoreCase(n)) {
                 divider();
-                System.out.printf("%-4s %-12s %-15s %-9s %-15s %-30s\n", "#", "Name", "Type(s)", "Base Lv", "Held Item",
-                        "Moves");
+                header();
                 divider();
                 p.display();
                 isFound = true;
@@ -179,6 +189,9 @@ public class PokemonManager {
         System.out.println("");
     }
 
+    /**
+     * Handles user input to perform a Pokémon search by name, type, or Pokédex number.
+     */
     public void handlePokemonSearch() {
         System.out.println("\n--- Search Pokémon ---");
         System.out.println("1. By Name");
@@ -201,7 +214,7 @@ public class PokemonManager {
                 break;
             case "3":
                 System.out.print("Enter pokedex number: ");
-                int num = scan.nextInt();
+                String num = scan.nextLine();
                 searchByPokedexNumber(num);
                 break;
             default:
@@ -209,7 +222,30 @@ public class PokemonManager {
         }
     }
 
-    // Helper function for string input
+     /**
+     * Checks if the provided Pokédex number is unique in the current list.
+     *
+     * @param pokedexNumber the Pokédex number to validate
+     * @return true if the number is unique, false otherwise
+     */
+    private boolean isUnique(String pokedexNumber) {
+        for (Pokemon p : pokemons) {
+            if (p.getPokedexNumber().equalsIgnoreCase(pokedexNumber)) {
+                System.out.println("This Pokédex number already exists!");
+                return false;
+            }
+        }
+        return true;
+    }
+
+     /**
+     * Reads and validates a string input using a given regex pattern.
+     *
+     * @param scan      the Scanner object for input
+     * @param attribute the name of the attribute being input (used in the prompt)
+     * @param regex     the regular expression used for validation
+     * @return a valid string that matches the regex
+     */
     public static String readValidString(Scanner scan, String attribute, String regex) {
         String input;
 
@@ -225,8 +261,14 @@ public class PokemonManager {
         }
     }
 
-    // Helper function for int input
-    private static int readValidInt(Scanner scan, String attribute) {
+    /**
+     * Reads and validates an integer input from the user.
+     *
+     * @param scan      the Scanner object for input
+     * @param attribute the name of the attribute being input (used in the prompt)
+     * @return a valid integer value
+     */
+    public static int readValidInt(Scanner scan, String attribute) {
         int input;
 
         while (true) {
@@ -241,8 +283,21 @@ public class PokemonManager {
         }
     }
 
+    /**
+     * Prints a divider line used for visual separation in console output.
+     */
     private static void divider() {
-        System.out.println("--------------------------------------------------------------------------------------");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------");
+    }
+
+    /**
+     * Prints the header row for Pokémon display tables.
+     */
+    private static void header() {
+        System.out.printf("%-6s %-12s %-15s %-7s %-5s %-7s %-8s %-9s %-9s %-6s\n", "#", "Name", "Type(s)", "Total",
+                "HP",
+                "Attack", "Defense", "Sp.Atk", "Sp.Def", "Speed");
     }
 
 }
