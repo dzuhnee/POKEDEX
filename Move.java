@@ -2,7 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// This class represents a Pokémon move
+/**
+ * Represents a Pokémon move with a name, description, classification (HM/TM),
+ * and types (primary and optional secondary).
+ */
 public class Move {
 
     private final String name;
@@ -11,7 +14,15 @@ public class Move {
     private final String primaryType;
     private final String secondaryType;
 
-    // Constructor to initialize all the move properties
+    /**
+     * Constructs a Move with the specified details.
+     *
+     * @param name            the name of the move
+     * @param description     the description or effect of the move
+     * @param classification  whether the move is an HM or TM
+     * @param primaryType     the primary type of the move (e.g., Fire, Water)
+     * @param secondaryType   the secondary type of the move (optional, can be empty)
+     */
     public Move(String name, String description, Classification classification, String primaryType,
                 String secondaryType) {
         this.name = name;
@@ -22,42 +33,63 @@ public class Move {
     }
 
     // Getters
+
+    /** @return the name of the move */
     public String getName() {
         return name;
     }
 
+    /** @return the move's description or effect */
     public String getDescription() {
         return description;
     }
 
+    /** @return the classification of the move (HM or TM) */
     public Classification getClassification() {
         return classification;
     }
 
+    /** @return the move's primary type */
     public String getPrimaryType() {
         return primaryType;
     }
 
+    /** @return the move's secondary type (can be empty) */
     public String getSecondaryType() {
         return secondaryType;
     }
 
+    /**
+     * Enum representing a move's classification: either HM or TM.
+     */
     public enum Classification {
         HM,
         TM
     }
 }
 
-// Helper class for taking validated user input when adding a move
+/**
+ * Helper class that provides validated user input functionality for creating moves.
+ */
 class MoveInputHelper {
 
     private final Scanner scanner;
 
+    /**
+     * Constructs a MoveInputHelper using a provided Scanner.
+     *
+     * @param scanner the Scanner to read user input
+     */
     public MoveInputHelper(final Scanner scanner) {
         this.scanner = scanner;
     }
 
-    // Lets the user input a valid move name, checks for duplicates & invalid characters
+    /**
+     * Prompts the user to input a valid move name, checking for duplicates and formatting.
+     *
+     * @param manager the MoveManager to check for duplicate names
+     * @return a valid, formatted move name
+     */
     public String inputMoveName(MoveManager manager) {
         String name;
 
@@ -84,7 +116,11 @@ class MoveInputHelper {
         return name;
     }
 
-    // Lets the user input a valid description for the move
+    /**
+     * Prompts the user to input a valid move description.
+     *
+     * @return a validated and formatted move description
+     */
     public String inputMoveDescription() {
         String description;
 
@@ -109,7 +145,11 @@ class MoveInputHelper {
         return description;
     }
 
-    // Lets the user choose between HM and TM
+    /**
+     * Prompts the user to input a move classification (HM or TM).
+     *
+     * @return the selected Classification
+     */
     public Move.Classification inputMoveClassification() {
         while (true) {
             System.out.print("Enter move classification (HM or TM): ");
@@ -123,21 +163,31 @@ class MoveInputHelper {
         }
     }
 
-    // Lets the user enter a move's type (e.g., Fire, Water)
+    /**
+     * Prompts the user to enter a valid type for a move.
+     *
+     * @param typeName the label for the type (e.g., "primary" or "secondary")
+     * @return a properly capitalized valid type string
+     */
     public String inputMoveTyping(String typeName) {
         while (true) {
             System.out.print("Enter " + typeName + " Type: ");
-            String input = scanner.nextLine().trim();
+            String input = scanner.nextLine().trim().toLowerCase();
 
-            if (!input.isEmpty() && input.matches("[A-Za-z]+")) {
+            if (TypeUtils.isValidType(input)) {
                 return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
             } else {
-                System.out.println("Invalid type. Only letters are allowed.");
+                System.out.println("Invalid type. Please enter a valid Pokémon type.");
             }
         }
     }
 
-    // Optional input: asks if the move has a second type
+    /**
+     * Asks the user if the move has a secondary type and captures it.
+     *
+     * @param typeName the label for the type
+     * @return the secondary type if provided, otherwise an empty string
+     */
     public String inputSecondaryMoveType(String typeName) {
         System.out.print("Does this move have a Secondary Type? (0 = No, 1 = Yes): ");
         String input = scanner.nextLine().trim();
@@ -153,20 +203,29 @@ class MoveInputHelper {
     }
 }
 
-// Manager class that handles move operations like adding, searching, viewing
+/**
+ * Manages a collection of Pokémon moves, including adding, viewing, and searching.
+ */
 class MoveManager {
 
     private final List<Move> moveList;
     private final MoveInputHelper inputHelper;
     private final Scanner scanner;
 
+    /**
+     * Constructs a MoveManager instance with user input capabilities.
+     *
+     * @param scanner the Scanner to read user input
+     */
     public MoveManager(final Scanner scanner) {
         inputHelper = new MoveInputHelper(scanner);
         moveList = new ArrayList<>();
         this.scanner = scanner;
     }
 
-    // Adds a new move, makes sure everything is valid
+    /**
+     * Prompts the user to input a new move and adds it to the list if valid.
+     */
     public void addMove() {
         String name = inputHelper.inputMoveName(this);
         String description = inputHelper.inputMoveDescription();
@@ -190,7 +249,12 @@ class MoveManager {
                 " (" + newMove.getClassification() + ")");
     }
 
-     // Checks if a move name is already used
+    /**
+     * Checks if a move name already exists in the list.
+     *
+     * @param name the move name to check
+     * @return true if name is taken, false otherwise
+     */
     public boolean isMoveNameTaken(String name) {
         for (Move m : moveList) {
             if (m.getName().equalsIgnoreCase(name)) {
@@ -200,7 +264,9 @@ class MoveManager {
         return false;
     }
 
-    // Displays all the moves in a clean, tabular format
+    /**
+     * Displays all moves in a tabular format with name, classification, types, and description.
+     */
     public void viewAllMovesAvailable() {
         if (moveList.isEmpty()) {
             System.out.println("\nSystem: No moves in the database.");
@@ -242,7 +308,9 @@ class MoveManager {
         }
     }    
 
-    // Shows the search menu and handles search based on user choice
+    /**
+     * Displays a menu and lets the user choose how to search for a move.
+     */
     public void handleMoveSearch() {
         System.out.println("\n--- Search Pokémon Moves ---");
         System.out.println("1. By Name or Effect");
@@ -278,7 +346,11 @@ class MoveManager {
         }
     }
 
-    // Search for moves that match a keyword in name or effect
+     /**
+     * Searches for moves containing the given keyword in name or effect.
+     *
+     * @param keyword the keyword to search
+     */
     public void searchByNameOrEffect(String keyword) {
         List<Move> results = new ArrayList<>();
         for (Move m : moveList) {
@@ -290,7 +362,11 @@ class MoveManager {
         showSearchResults(results, "Keyword: " + keyword);
     }
 
-    // Search for moves by type (either primary or secondary)
+    /**
+     * Searches for moves by type.
+     *
+     * @param type the type to match (primary or secondary)
+     */
     public void searchByType(String type) {
         List<Move> results = new ArrayList<>();
         for (Move m : moveList) {
@@ -304,7 +380,11 @@ class MoveManager {
         showSearchResults(results, "Type: " + type);
     }
 
-    // Search for moves by classification (HM or TM)
+    /**
+     * Searches for moves by classification.
+     *
+     * @param classification the classification to search (HM or TM)
+     */
     public void searchByClassification(Move.Classification classification) {
         List<Move> results = new ArrayList<>();
         for (Move m : moveList) {
@@ -315,7 +395,12 @@ class MoveManager {
         showSearchResults(results, "Classification: " + classification);
     }
 
-    // Displays the search results
+    /**
+     * Displays a formatted list of matching moves.
+     *
+     * @param results the list of matching moves
+     * @param title   the header/title for the search result
+     */
     public void showSearchResults(List<Move> results, String title) {
         if (results.isEmpty()) {
             System.out.println("No moves found for " + title);
@@ -338,7 +423,9 @@ class MoveManager {
         }
     }
 
-    // Adds two default sample moves when the program starts
+    /**
+     * Loads two default sample moves when the program starts.
+     */
     public void loadDefaultMoves() {
         Move tackle = new Move("Tackle",
                 "Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.",

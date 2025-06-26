@@ -1,6 +1,18 @@
 import java.util.Scanner;
 
+/**
+ * The Main class serves as the entry point for the Pokémon Database application.
+ * It presents a menu to the user and allows interaction with various managers
+ * to handle Pokémon, Moves, and Items. Each manager provides options to add,
+ * view, or search their respective data.
+ */
 public class Main {
+    /**
+     * The main method runs the application, continuously prompting the user
+     * for menu selections and executing corresponding actions.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         java.util.Scanner scan = new Scanner(System.in);
         int choice;
@@ -8,12 +20,12 @@ public class Main {
 
         // Initialize Managers
         PokemonManager pokemonManager = new PokemonManager();
-        Items itemManager = new Items(scan);
+        ItemManager itemManager = new ItemManager(scan);
         MoveManager moveManager = new MoveManager(scan);
         moveManager.loadDefaultMoves();
 
         while (true) {
-            // Main Menu
+            // Display Main Menu
             System.out.printf("\n%45s%n", "Pokémon Database Menu");
             System.out.println("========================================================================");
             System.out.println("| 1. Add Pokemon            4. Add Move            7. View Items       |");
@@ -23,6 +35,7 @@ public class Main {
 
             System.out.print("Enter choice: ");
 
+            // Ensure valid integer input
             if (scan.hasNextInt()) {
                 choice = scan.nextInt();
                 scan.nextLine();
