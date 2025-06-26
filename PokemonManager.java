@@ -2,11 +2,20 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * This class manages a list of Pokémon and allows adding, displaying, and
+ * searching Pokémon.
+ */
 public class PokemonManager {
-    Scanner scan = new Scanner(System.in);
-    List<Pokemon> pokemons = new ArrayList<>();
-    Items items = new Items(scan);
+    final Scanner scan = new Scanner(System.in);
+    final List<Pokemon> pokemons = new ArrayList<>();
 
+    /**
+     * Prompts the user to enter all necessary data to add a new Pokémon.
+     * Validates input formats and adds the Pokémon to the list once confirmed.
+     *
+     * @return true if the Pokémon was successfully added, false otherwise
+     */
     public boolean addPokemon() {
         // Variables to store data temporarily
         String pokedexNumber;
@@ -66,17 +75,18 @@ public class PokemonManager {
         spDefense = PokemonBaseStats.readValidBaseStat(scan, "Special Defense");
         speed = PokemonBaseStats.readValidBaseStat(scan, "Speed");
 
-        // Instantiate 
+        // Instantiate Pokémon
         Pokemon pokemon;
         if (secondaryType != null) {
-            pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, 0, 0, 0,
+            pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, 0, null, null,
                     0, hp, attack, defense, spAttack, spDefense, speed);
         } else {
-            pokemon = new Pokemon(pokedexNumber, name, primaryType, 0, 0, 0, 0,
+            pokemon = new Pokemon(pokedexNumber, name, primaryType, 0, null, null, 0,
                     hp, attack, defense, spAttack, spDefense, speed);
         }
 
-        System.out.printf("\n" + name + " is ready to join! Add to your Pokémon [Y/N]: ");      // Confirmation
+        // Confirmation
+        System.out.printf("\n" + name + " is ready to join! Add to your Pokémon [Y/N]: ");
         String c;
         do {
             c = scan.nextLine();
@@ -94,10 +104,12 @@ public class PokemonManager {
         return false;
     }
 
+    /**
+     * Displays all Pokémon currently stored in the system.
+     */
     public void displayAllPokemons() {
         System.out.printf("\n--- View All Pokémon ---\n\n");
 
-        // Check if there is an existing Pokémon
         if (pokemons.isEmpty()) {
             System.out.println("No Pokémon in the database.");
             return;
@@ -114,6 +126,12 @@ public class PokemonManager {
         System.out.println("");
     }
 
+    /**
+     * Searches the Pokémon list for any Pokémon whose name contains the given
+     * string.
+     *
+     * @param s the name or part of a name to search for
+     */
     public void searchByName(String s) {
         boolean isFound = false;
 
@@ -134,6 +152,11 @@ public class PokemonManager {
         System.out.println("");
     }
 
+    /**
+     * Searches the Pokémon list by type (either primary or secondary).
+     *
+     * @param s the type name to search for
+     */
     public void searchByType(String s) {
         boolean matchesPrimary = false;
         boolean matchesSecondary = false;
@@ -158,6 +181,11 @@ public class PokemonManager {
         System.out.println("");
     }
 
+    /**
+     * Searches the Pokémon list by Pokédex number.
+     *
+     * @param n the Pokédex number to search for (must be 4 digits)
+     */
     public void searchByPokedexNumber(String n) {
         boolean isFound = false;
 
@@ -179,6 +207,9 @@ public class PokemonManager {
         System.out.println("");
     }
 
+    /**
+     * Handles the Pokémon search menu and lets the user choose how to search.
+     */
     public void handlePokemonSearch() {
         System.out.println("\n--- Search Pokémon ---");
         System.out.println("1. By Name");
@@ -207,8 +238,14 @@ public class PokemonManager {
         }
     }
 
-    // Helper function to ensure pokedex numbers are unique
-    private boolean isValidDexNumber(String pokedexNumber) {
+    /**
+     * Validates that the given Pokédex number is in the correct format and range
+     * (0001 to 1010).
+     *
+     * @param pokedexNumber the number to validate
+     * @return {@code true} if valid; {@code false} otherwise
+     */
+    private static boolean isValidDexNumber(String pokedexNumber) {
         // Checks if input is unique
         if (pokedexNumber.matches("\\d{4}")) {
             int number = Integer.parseInt(pokedexNumber);
@@ -217,7 +254,14 @@ public class PokemonManager {
         return false;
     }
 
-    // Helper function for string input
+    /**
+     * Reads a valid string from the user that matches the given regex pattern.
+     *
+     * @param scan      the Scanner object to read input
+     * @param attribute the name of the attribute to display in the prompt
+     * @param regex     the regular expression pattern to match
+     * @return a valid string input from the user
+     */
     public static String readValidString(Scanner scan, String attribute, String regex) {
         String input;
 
@@ -233,7 +277,13 @@ public class PokemonManager {
         }
     }
 
-    // Helper function for int input
+    /**
+     * Reads a valid integer from the user.
+     *
+     * @param scan      the Scanner object to read input
+     * @param attribute the name of the attribute to display in the prompt
+     * @return a valid integer input from the user
+     */
     public static int readValidInt(Scanner scan, String attribute) {
         int input;
 
@@ -249,11 +299,17 @@ public class PokemonManager {
         }
     }
 
+    /**
+     * Prints a divider line for formatting.
+     */
     private static void divider() {
         System.out.println(
                 "--------------------------------------------------------------------------------------------");
     }
 
+    /**
+     * Prints the header row for Pokémon display output.
+     */
     private static void header() {
         System.out.printf("%-6s %-12s %-15s %-7s %-5s %-7s %-8s %-9s %-9s %-6s\n", "#", "Name", "Type(s)", "Total",
                 "HP",

@@ -13,12 +13,12 @@ public class Pokemon {
     private String primaryType;
     private String secondaryType;
     private int baseLevel;
-    private int evolvesFrom;
-    private int evolvesTo;
+    private String evolvesFrom;
+    private String evolvesTo;
     private int evolutionLevel;
     private List<Move> moveSet;
     private Item heldItem = null;
-    private PokemonBaseStats baseStats;
+    private final PokemonBaseStats baseStats;
 
     /**
      * Constructs a dual-type Pokémon with specified information.
@@ -39,8 +39,8 @@ public class Pokemon {
      * @param speed          the base Speed stat
      */
     public Pokemon(String pokedexNumber, String name, String primaryType, String secondaryType, int baseLevel,
-            int evolvesFrom,
-            int evolvesTo, int evolutionLevel, int hp, int attack, int defense, int spAttack, int spDefense,
+            String evolvesFrom,
+            String evolvesTo, int evolutionLevel, int hp, int attack, int defense, int spAttack, int spDefense,
             int speed) {
         this.pokedexNumber = pokedexNumber;
         this.name = name;
@@ -73,7 +73,7 @@ public class Pokemon {
      * @param spDefense      the base Special Defense stat
      * @param speed          the base Speed stat
      */
-    public Pokemon(String pokedexNumber, String name, String primaryType, int baseLevel, int evolvesFrom, int evolvesTo,
+    public Pokemon(String pokedexNumber, String name, String primaryType, int baseLevel, String evolvesFrom, String evolvesTo,
             int evolutionLevel, int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
         this(pokedexNumber, name, primaryType, null, baseLevel, evolvesFrom, evolvesTo, evolutionLevel,
                 hp, attack, defense, spAttack, spDefense, speed);
@@ -129,7 +129,7 @@ public class Pokemon {
      *
      * @return the Pokédex number it evolves from
      */
-    public int getEvolvesFrom() {
+    public String getEvolvesFrom() {
         return evolvesFrom;
     }
 
@@ -138,7 +138,7 @@ public class Pokemon {
      *
      * @return the Pokédex number it evolves to
      */
-    public int getEvolvesTo() {
+    public String getEvolvesTo() {
         return evolvesTo;
     }
 
@@ -254,12 +254,12 @@ public class Pokemon {
  * Special Defense, and Speed.
  */
 class PokemonBaseStats {
-    private int hp;
-    private int attack;
-    private int defense;
-    private int spAttack;
-    private int spDefense;
-    private int speed;
+    private final int hp;
+    private final int attack;
+    private final int defense;
+    private final int spAttack;
+    private final int spDefense;
+    private final int speed;
 
     /**
      * Constructs a PokemonBaseStats object with the given base stat values.
