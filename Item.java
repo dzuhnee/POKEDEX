@@ -225,4 +225,15 @@ class Items {
         }
         return null;
     }
+
+    public boolean isValid(String heldItem){
+        Item item = findItem(heldItem);
+
+        if (item != null) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
