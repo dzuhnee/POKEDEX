@@ -1,17 +1,12 @@
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PokemonManager {
     Scanner scan = new Scanner(System.in);
     List<Pokemon> pokemons = new ArrayList<>();
-    ItemManager itemManager = new ItemManager(scan);
+    Items items = new Items(scan);
 
-     /**
-     * Prompts the user to input Pokémon details and adds it to the list if confirmed.
-     *
-     * @return true if the Pokémon was added, false otherwise
-     */
     public boolean addPokemon() {
         // Variables to store data temporarily
         String pokedexNumber;
@@ -93,9 +88,6 @@ public class PokemonManager {
         return false;
     }
 
-    /**
-     * Displays all Pokémon currently stored in the database.
-     */
     public void displayAllPokemons() {
         if (pokemons.isEmpty()) {
             System.out.println("No Pokémon in the database.");
@@ -112,11 +104,6 @@ public class PokemonManager {
         System.out.println("");
     }
 
-    /**
-     * Searches for Pokémon whose names contain the specified keyword (case-insensitive).
-     *
-     * @param s the name or part of the name to search for
-     */
     public void searchByName(String s) {
         boolean isFound = false;
 
@@ -137,11 +124,6 @@ public class PokemonManager {
         System.out.println("");
     }
 
-     /**
-     * Searches for Pokémon by their primary or secondary type.
-     *
-     * @param s the type name to search for (case-insensitive)
-     */
     public void searchByType(String s) {
         boolean matchesPrimary = false;
         boolean matchesSecondary = false;
@@ -165,11 +147,6 @@ public class PokemonManager {
         System.out.println("");
     }
 
-    /**
-     * Searches for Pokémon by their Pokédex number.
-     *
-     * @param n the 4-digit Pokédex number as a string
-     */
     public void searchByPokedexNumber(String n) {
         boolean isFound = false;
         for (Pokemon p : pokemons) {
@@ -189,9 +166,6 @@ public class PokemonManager {
         System.out.println("");
     }
 
-    /**
-     * Handles user input to perform a Pokémon search by name, type, or Pokédex number.
-     */
     public void handlePokemonSearch() {
         System.out.println("\n--- Search Pokémon ---");
         System.out.println("1. By Name");
@@ -222,12 +196,7 @@ public class PokemonManager {
         }
     }
 
-     /**
-     * Checks if the provided Pokédex number is unique in the current list.
-     *
-     * @param pokedexNumber the Pokédex number to validate
-     * @return true if the number is unique, false otherwise
-     */
+    // Helper function to ensure pokedex numbers are unique
     private boolean isUnique(String pokedexNumber) {
         for (Pokemon p : pokemons) {
             if (p.getPokedexNumber().equalsIgnoreCase(pokedexNumber)) {
@@ -238,14 +207,7 @@ public class PokemonManager {
         return true;
     }
 
-     /**
-     * Reads and validates a string input using a given regex pattern.
-     *
-     * @param scan      the Scanner object for input
-     * @param attribute the name of the attribute being input (used in the prompt)
-     * @param regex     the regular expression used for validation
-     * @return a valid string that matches the regex
-     */
+    // Helper function for string input
     public static String readValidString(Scanner scan, String attribute, String regex) {
         String input;
 
@@ -261,13 +223,7 @@ public class PokemonManager {
         }
     }
 
-    /**
-     * Reads and validates an integer input from the user.
-     *
-     * @param scan      the Scanner object for input
-     * @param attribute the name of the attribute being input (used in the prompt)
-     * @return a valid integer value
-     */
+    // Helper function for int input
     public static int readValidInt(Scanner scan, String attribute) {
         int input;
 
@@ -283,17 +239,11 @@ public class PokemonManager {
         }
     }
 
-    /**
-     * Prints a divider line used for visual separation in console output.
-     */
     private static void divider() {
         System.out.println(
                 "--------------------------------------------------------------------------------------------");
     }
 
-    /**
-     * Prints the header row for Pokémon display tables.
-     */
     private static void header() {
         System.out.printf("%-6s %-12s %-15s %-7s %-5s %-7s %-8s %-9s %-9s %-6s\n", "#", "Name", "Type(s)", "Total",
                 "HP",
