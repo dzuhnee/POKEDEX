@@ -14,6 +14,7 @@ public class PokemonManager {
         String primaryType = null;
         String secondaryType = null;
         int hp, defense, spDefense, attack, spAttack, speed;
+        String evolvesFrom, evolvesTo;
 
         // Get user input
         System.out.printf("\n--- Add Pokémon ---\n");
@@ -23,7 +24,7 @@ public class PokemonManager {
         do {
             pokedexNumber = readValidString(scan,
                     "Pokédex number (format as 4 digits with leading zeros, e.g., 0001)", "^\\d{4}$");
-        } while (!isUnique(pokedexNumber));
+        } while (!isValidDexNumber(pokedexNumber));
 
         // Name
         name = readValidString(scan, "name", "[A-Za-z\\s]+");
@@ -47,6 +48,16 @@ public class PokemonManager {
                 secondaryType = readValidString(scan, "secondary type", "[A-Za-z\\s]+");
             } while (!TypeUtils.isValidType(secondaryType));
         }
+
+        // Evolves from
+        do {
+            evolvesFrom = readValidString(scan, "dex number that Pokémon evolves from", "^\\d{4}$");
+        } while (!isValidDexNumber(evolvesFrom));
+
+        // Evolves to
+        do {
+            evolvesTo = readValidString(scan, "dex number that Pokémon evolves to", "^\\d{4}$");
+        } while (!isValidDexNumber(evolvesTo));
 
         // Base Stats
         System.out.printf("\nEnter the Base Stats\n");
@@ -197,14 +208,13 @@ public class PokemonManager {
     }
 
     // Helper function to ensure pokedex numbers are unique
-    private boolean isUnique(String pokedexNumber) {
-        for (Pokemon p : pokemons) {
-            if (p.getPokedexNumber().equalsIgnoreCase(pokedexNumber)) {
-                System.out.println("This Pokédex number already exists!");
-                return false;
-            }
+    private boolean isValidDexNumber(String pokedexNumber) {
+        // Checks if input is unique
+        if (pokedexNumber.matches("\\d{4}")) {
+            int number = Integer.parseInt(pokedexNumber);
+            return number >= 1 && number <= 1010;
         }
-        return true;
+        return false;
     }
 
     // Helper function for string input
