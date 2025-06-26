@@ -16,9 +16,7 @@ public class PokemonManager {
         int hp, defense, spDefense, attack, spAttack, speed;
         String evolvesFrom, evolvesTo;
 
-        // Get user input
-        System.out.printf("\n--- Add Pokémon ---\n");
-        System.out.println("");
+        System.out.printf("\n--- Add Pokémon ---\n\n");
 
         // Pokedex Number
         do {
@@ -68,11 +66,8 @@ public class PokemonManager {
         spDefense = PokemonBaseStats.readValidBaseStat(scan, "Special Defense");
         speed = PokemonBaseStats.readValidBaseStat(scan, "Speed");
 
-        // Instantiate
+        // Instantiate 
         Pokemon pokemon;
-
-        // if there are two types
-        // 0 muna iba bcs di pa ata need for now
         if (secondaryType != null) {
             pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, 0, 0, 0,
                     0, hp, attack, defense, spAttack, spDefense, speed);
@@ -81,8 +76,8 @@ public class PokemonManager {
                     hp, attack, defense, spAttack, spDefense, speed);
         }
 
+        System.out.printf("\n" + name + " is ready to join! Add to your Pokémon [Y/N]: ");      // Confirmation
         String c;
-        System.out.print(name + " is ready to join! Add to your Pokémon [Y/N]: ");
         do {
             c = scan.nextLine();
             if (!c.equalsIgnoreCase("Y") && !c.equalsIgnoreCase("N")) {
@@ -92,7 +87,7 @@ public class PokemonManager {
 
         if (c.equalsIgnoreCase("Y")) {
             pokemons.add(pokemon);
-            System.out.println("Pokemon \"" + name + "\" added successfully!");
+            System.out.println("Pokémon \"" + name + "\" added successfully!");
             System.out.println("");
             return true;
         }
@@ -100,6 +95,9 @@ public class PokemonManager {
     }
 
     public void displayAllPokemons() {
+        System.out.printf("\n--- View All Pokémon ---\n\n");
+
+        // Check if there is an existing Pokémon
         if (pokemons.isEmpty()) {
             System.out.println("No Pokémon in the database.");
             return;
@@ -108,6 +106,7 @@ public class PokemonManager {
         divider();
         header();
         divider();
+
         for (Pokemon p : pokemons) {
             p.display();
         }
@@ -189,20 +188,18 @@ public class PokemonManager {
 
         String option = scan.nextLine();
 
+        System.out.println("");
         switch (option) {
             case "1":
-                System.out.print("Enter name: ");
-                String name = scan.nextLine().trim();
+                String name = readValidString(scan, "name", "[A-Za-z\\s]+");
                 searchByName(name);
                 break;
             case "2":
-                System.out.print("Enter type (e.g., Fire, Water): ");
-                String type = scan.nextLine().trim();
+                String type = readValidString(scan, "type", "[A-Za-z\\s]+");
                 searchByType(type);
                 break;
             case "3":
-                System.out.print("Enter Pokédex number (must be 4 digits): ");
-                String num = scan.nextLine();
+                String num = readValidString(scan, "Pokédex number (must be 4 digits)", "^\\d{4}$");
                 searchByPokedexNumber(num);
                 break;
             default:
@@ -228,8 +225,8 @@ public class PokemonManager {
             System.out.print("Enter " + attribute + ": ");
             input = scan.nextLine().trim();
 
-            if (!input.matches(regex)) {
-                System.out.println("Invalid input. Please try again!");
+            if (!input.matches(regex) || input.isEmpty()) {
+                System.out.println("Input is invalid or empty. Please try again!");
             } else {
                 return input;
             }
