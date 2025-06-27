@@ -27,13 +27,4 @@ public class TypeUtils {
         System.out.println(type + " is not a type!");
         return false;
     }
-
-    /**
-     * Returns a comma-separated string of all valid Pokémon types.
-     *
-     * @return a string listing all valid types
-     */
-    public static String getValidTypesAsString() {
-        return String.join(", ", VALID_TYPES);
-    }
 }
