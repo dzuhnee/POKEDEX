@@ -48,7 +48,7 @@ public class Main {
                             pokemonManager.addPokemon();
                             break;
                         case 2:
-                            pokemonManager.displayAllPokemons();
+                            pokemonManager.displayAllPokemon();
                             break;
                         case 3:
                             pokemonManager.handlePokemonSearch();

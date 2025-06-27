@@ -7,8 +7,8 @@ import java.util.Scanner;
  * searching Pokémon.
  */
 public class PokemonManager {
-    final Scanner scan = new Scanner(System.in);
-    final List<Pokemon> pokemons = new ArrayList<>();
+    private final Scanner scan = new Scanner(System.in);
+    private final List<Pokemon> pokemons = new ArrayList<>();
 
     /**
      * Prompts the user to enter all necessary data to add a new Pokémon.
@@ -107,7 +107,7 @@ public class PokemonManager {
     /**
      * Displays all Pokémon currently stored in the system.
      */
-    public void displayAllPokemons() {
+    public void displayAllPokemon() {
         System.out.printf("\n--- View All Pokémon ---\n\n");
 
         if (pokemons.isEmpty()) {
