@@ -265,7 +265,7 @@ public class PokemonManager {
      * @return {@code true} if valid; {@code false} otherwise
      */
     private static boolean isValidDexNumber(int pokedexNumber) {
-        if (pokedexNumber >= 0 && pokedexNumber <= 1010) {
+        if (pokedexNumber >= 1 && pokedexNumber <= 1010) {
             return true;
         }
         return false;
