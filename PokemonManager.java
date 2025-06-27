@@ -49,7 +49,7 @@ public class PokemonManager {
             pokedexNumber = readValidInt(scan, "Pokédex number (1-1010)");
 
             if (!isValidDexNumber(pokedexNumber)) {
-                System.out.println("Invalid input. Please try again.");
+                System.out.println("Pokedex already exists or invalid input. Please try again.");
             }
         } while (!isValidDexNumber(pokedexNumber));
 
@@ -264,11 +264,18 @@ public class PokemonManager {
      * @param pokedexNumber the number to validate
      * @return {@code true} if valid; {@code false} otherwise
      */
-    private static boolean isValidDexNumber(int pokedexNumber) {
-        if (pokedexNumber >= 1 && pokedexNumber <= 1010) {
-            return true;
+    private boolean isValidDexNumber(int pokedexNumber) {
+        if (pokedexNumber < 1 || pokedexNumber > 1010) {
+            return false;
         }
-        return false;
+    
+        for (Pokemon p : pokemons) {
+            if (p.getPokedexNumber() == pokedexNumber) {
+                return false;
+            }
+        }
+    
+        return true;
     }
 
     /**
