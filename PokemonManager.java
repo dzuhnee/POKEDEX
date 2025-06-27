@@ -46,7 +46,7 @@ public class PokemonManager {
 
         // Pokedex Number
         do {
-            pokedexNumber = readValidInt(scan, "Pokédex number (0-1010)");
+            pokedexNumber = readValidInt(scan, "Pokédex number (1-1010)");
 
             if (!isValidDexNumber(pokedexNumber)) {
                 System.out.println("Invalid input. Please try again.");
@@ -57,6 +57,7 @@ public class PokemonManager {
         name = readValidString(scan, "name", "[A-Za-z\\s]+");
 
         // Type 1
+        System.out.println("Choose from: normal, fire, water, electric, grass, ice, fighting, poison, ground, \nflying, psychic, bug, rock, ghost, dragon, dark, steel, fairy");
         do {
             primaryType = readValidString(scan, "primary type", "[A-Za-z\\s]+");
         } while (!TypeUtils.isValidType(primaryType));
