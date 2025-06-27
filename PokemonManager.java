@@ -177,28 +177,29 @@ public class PokemonManager {
      * @param s the type name to search for
      */
     public void searchByType(String s) {
-        boolean matchesPrimary = false;
-        boolean matchesSecondary = false;
-
+        boolean foundMatch = false;
+    
         divider();
         header();
         divider();
-
+    
         for (Pokemon p : pokemons) {
-            if (p.getPrimaryType().toLowerCase().contains(s.toLowerCase())
-                    || p.getSecondaryType().toLowerCase().contains(s.toLowerCase())) {
+            String primary = p.getPrimaryType();
+            String secondary = p.getSecondaryType();
+    
+            if ((primary != null && primary.toLowerCase().contains(s.toLowerCase())) ||
+                (secondary != null && secondary.toLowerCase().contains(s.toLowerCase()))) {
                 p.display();
-                matchesPrimary = true;
-                matchesSecondary = true;
+                foundMatch = true;
             }
         }
-
-        if (!matchesPrimary || !matchesSecondary) {
+    
+        if (!foundMatch) {
             System.out.println("No Pokémon matched your search.");
         }
-
-        System.out.println("");
-    }
+    
+        System.out.println();
+    }    
 
     /**
      * Searches the Pokémon list by Pokédex number.

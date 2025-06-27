@@ -1,8 +1,7 @@
 import java.util.Scanner;
 
 /**
- * The Main class serves as the entry point for the Pokémon Database
- * application.
+ * The Main class serves as the entry point for the Pokémon Database application.
  * It presents a menu to the user and allows interaction with various managers
  * to handle Pokémon, Moves, and Items. Each manager provides options to add,
  * view, or search their respective data.
@@ -17,6 +16,7 @@ public class Main {
     public static void main(String[] args) {
         java.util.Scanner scan = new Scanner(System.in);
         int choice;
+
 
         // Initialize Managers
         PokemonManager pokemonManager = new PokemonManager();

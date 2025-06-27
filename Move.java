@@ -328,7 +328,8 @@ class MoveManager {
                 searchByNameOrEffect(keyword);
                 break;
             case "2":
-                System.out.print("Enter type (e.g., Fire, Water): ");
+                System.out.print("Enter type (\"Choose from: normal, fire, water, electric, grass, ice, fighting, poison, ground, \\n" + //
+                        "flying, psychic, bug, rock, ghost, dragon, dark, steel, fairy\"): ");
                 String type = scanner.nextLine().trim();
                 searchByType(type);
                 break;
