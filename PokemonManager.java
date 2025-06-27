@@ -58,7 +58,7 @@ public class PokemonManager {
         name = readValidString(scan, "name", "[A-Za-z\\s]+");
 
         // Type 1 - Pokémon's primary type
-        System.out.println("------------------ CHOOSE TYPE FROM -----------------------------");
+        System.out.println("--------------------- CHOOSE TYPE FROM ---------------------------");
         System.out.println("Normal      Fire       Water     Electric      Grass        Ice");
         System.out.println("Fighting    Poison     Ground    Flying        Psychic      Bug");
         System.out.println("Rock        Ghost      Dragon    Dark          Steel        Fairy");

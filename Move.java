@@ -17,14 +17,14 @@ public class Move {
     /**
      * Constructs a Move with the specified details.
      *
-     * @param name            the name of the move
-     * @param description     the description or effect of the move
-     * @param classification  whether the move is an HM or TM
-     * @param primaryType     the primary type of the move (e.g., Fire, Water)
-     * @param secondaryType   the secondary type of the move (optional, can be empty)
+     * @param name           the name of the move
+     * @param description    the description or effect of the move
+     * @param classification whether the move is an HM or TM
+     * @param primaryType    the primary type of the move (e.g., Fire, Water)
+     * @param secondaryType  the secondary type of the move (optional, can be empty)
      */
     public Move(String name, String description, Classification classification, String primaryType,
-                String secondaryType) {
+            String secondaryType) {
         this.name = name;
         this.description = description;
         this.classification = classification;
@@ -69,7 +69,8 @@ public class Move {
 }
 
 /**
- * Helper class that provides validated user input functionality for creating moves.
+ * Helper class that provides validated user input functionality for creating
+ * moves.
  */
 class MoveInputHelper {
 
@@ -85,7 +86,8 @@ class MoveInputHelper {
     }
 
     /**
-     * Prompts the user to input a valid move name, checking for duplicates and formatting.
+     * Prompts the user to input a valid move name, checking for duplicates and
+     * formatting.
      *
      * @param manager the MoveManager to check for duplicate names
      * @return a valid, formatted move name
@@ -204,7 +206,8 @@ class MoveInputHelper {
 }
 
 /**
- * Manages a collection of Pokémon moves, including adding, viewing, and searching.
+ * Manages a collection of Pokémon moves, including adding, viewing, and
+ * searching.
  */
 class MoveManager {
 
@@ -230,7 +233,11 @@ class MoveManager {
         String name = inputHelper.inputMoveName(this);
         String description = inputHelper.inputMoveDescription();
         Move.Classification classification = inputHelper.inputMoveClassification();
-        System.out.println("Choose from: normal, fire, water, electric, grass, ice, fighting, poison, ground, \nflying, psychic, bug, rock, ghost, dragon, dark, steel, fairy");
+        System.out.println("--------------------- CHOOSE TYPE FROM ---------------------------");
+        System.out.println("Normal      Fire       Water     Electric      Grass        Ice");
+        System.out.println("Fighting    Poison     Ground    Flying        Psychic      Bug");
+        System.out.println("Rock        Ghost      Dragon    Dark          Steel        Fairy");
+        System.out.println("------------------------------------------------------------------");
         String primaryType = inputHelper.inputMoveTyping("primary");
         String secondaryType;
 
@@ -266,24 +273,26 @@ class MoveManager {
     }
 
     /**
-     * Displays all moves in a tabular format with name, classification, types, and description.
+     * Displays all moves in a tabular format with name, classification, types, and
+     * description.
      */
     public void viewAllMovesAvailable() {
         if (moveList.isEmpty()) {
             System.out.println("\nSystem: No moves in the database.");
         } else {
             System.out.printf("%-20s %-10s %-15s %-55s\n", "Move Name", "Class", "Type(s)", "Description");
-            System.out.println("=======================================================================================================");
-    
+            System.out.println(
+                    "=======================================================================================================");
+
             for (Move m : moveList) {
                 String types = m.getPrimaryType();
                 if (m.getSecondaryType() != null && !m.getSecondaryType().isEmpty()) {
                     types += "/" + m.getSecondaryType();
                 }
-    
+
                 String description = m.getDescription();
                 int descWidth = 55;
-    
+
                 if (description.length() <= descWidth) {
                     System.out.printf("%-20s %-10s %-15s %-55s\n",
                             m.getName(),
@@ -296,7 +305,7 @@ class MoveManager {
                             m.getClassification(),
                             types,
                             description.substring(0, descWidth));
-    
+
                     int start = descWidth;
                     while (start < description.length()) {
                         int end = Math.min(start + descWidth, description.length());
@@ -307,7 +316,7 @@ class MoveManager {
                 }
             }
         }
-    }    
+    }
 
     /**
      * Displays a menu and lets the user choose how to search for a move.
@@ -328,8 +337,13 @@ class MoveManager {
                 searchByNameOrEffect(keyword);
                 break;
             case "2":
-                System.out.print("Enter type (\"Choose from: normal, fire, water, electric, grass, ice, fighting, poison, ground, \\n" + //
-                        "flying, psychic, bug, rock, ghost, dragon, dark, steel, fairy\"): ");
+                System.out.println("--------------------- CHOOSE TYPE FROM ---------------------------");
+                System.out.println("Normal      Fire       Water     Electric      Grass        Ice");
+                System.out.println("Fighting    Poison     Ground    Flying        Psychic      Bug");
+                System.out.println("Rock        Ghost      Dragon    Dark          Steel        Fairy");
+                System.out.println("------------------------------------------------------------------");
+                System.out.print(
+                        "Enter type: ");
                 String type = scanner.nextLine().trim();
                 searchByType(type);
                 break;
@@ -348,7 +362,7 @@ class MoveManager {
         }
     }
 
-     /**
+    /**
      * Searches for moves containing the given keyword in name or effect.
      *
      * @param keyword the keyword to search
@@ -357,7 +371,7 @@ class MoveManager {
         List<Move> results = new ArrayList<>();
         for (Move m : moveList) {
             if (m.getName().toLowerCase().contains(keyword.toLowerCase()) ||
-                m.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                    m.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
                 results.add(m);
             }
         }
@@ -373,8 +387,7 @@ class MoveManager {
         List<Move> results = new ArrayList<>();
         for (Move m : moveList) {
             boolean matchesPrimary = m.getPrimaryType().equalsIgnoreCase(type);
-            boolean matchesSecondary =
-                    m.getSecondaryType() != null && m.getSecondaryType().equalsIgnoreCase(type);
+            boolean matchesSecondary = m.getSecondaryType() != null && m.getSecondaryType().equalsIgnoreCase(type);
             if (matchesPrimary || matchesSecondary) {
                 results.add(m);
             }
