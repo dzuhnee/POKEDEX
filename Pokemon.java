@@ -13,12 +13,12 @@ public class Pokemon {
     private String primaryType;
     private String secondaryType;
     private int baseLevel;
-    private int evolvesFrom;
-    private int evolvesTo;
+    private String evolvesFrom;
+    private String evolvesTo;
     private int evolutionLevel;
     private List<Move> moveSet;
     private Item heldItem = null;
-    private PokemonBaseStats baseStats;
+    private final PokemonBaseStats baseStats;
 
     /**
      * Constructs a dual-type Pokémon with specified information.
@@ -34,14 +34,11 @@ public class Pokemon {
      * @param hp             the base HP stat
      * @param attack         the base Attack stat
      * @param defense        the base Defense stat
-     * @param spAttack       the base Special Attack stat
-     * @param spDefense      the base Special Defense stat
      * @param speed          the base Speed stat
      */
     public Pokemon(String pokedexNumber, String name, String primaryType, String secondaryType, int baseLevel,
-            int evolvesFrom,
-            int evolvesTo, int evolutionLevel, int hp, int attack, int defense, int spAttack, int spDefense,
-            int speed) {
+            String evolvesFrom,
+            String evolvesTo, int evolutionLevel, int hp, int attack, int defense, int speed) {
         this.pokedexNumber = pokedexNumber;
         this.name = name;
         this.primaryType = primaryType;
@@ -50,7 +47,7 @@ public class Pokemon {
         this.evolvesFrom = evolvesFrom;
         this.evolvesTo = evolvesTo;
         this.evolutionLevel = evolutionLevel;
-        this.baseStats = new PokemonBaseStats(hp, attack, defense, spAttack, spDefense, speed);
+        this.baseStats = new PokemonBaseStats(hp, attack, defense, speed);
 
         this.heldItem = null;
         this.moveSet = new ArrayList<>();
@@ -69,14 +66,12 @@ public class Pokemon {
      * @param hp             the base HP stat
      * @param attack         the base Attack stat
      * @param defense        the base Defense stat
-     * @param spAttack       the base Special Attack stat
-     * @param spDefense      the base Special Defense stat
      * @param speed          the base Speed stat
      */
-    public Pokemon(String pokedexNumber, String name, String primaryType, int baseLevel, int evolvesFrom, int evolvesTo,
-            int evolutionLevel, int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
+    public Pokemon(String pokedexNumber, String name, String primaryType, int baseLevel, String evolvesFrom, String evolvesTo,
+            int evolutionLevel, int hp, int attack, int defense, int speed) {
         this(pokedexNumber, name, primaryType, null, baseLevel, evolvesFrom, evolvesTo, evolutionLevel,
-                hp, attack, defense, spAttack, spDefense, speed);
+                hp, attack, defense, speed);
     }
 
     /**
@@ -129,7 +124,7 @@ public class Pokemon {
      *
      * @return the Pokédex number it evolves from
      */
-    public int getEvolvesFrom() {
+    public String getEvolvesFrom() {
         return evolvesFrom;
     }
 
@@ -138,7 +133,7 @@ public class Pokemon {
      *
      * @return the Pokédex number it evolves to
      */
-    public int getEvolvesTo() {
+    public String getEvolvesTo() {
         return evolvesTo;
     }
 
@@ -176,24 +171,6 @@ public class Pokemon {
      */
     public int getDefense() {
         return baseStats.getDefense();
-    }
-
-    /**
-     * Gets the base Special Attack stat.
-     *
-     * @return the Special Attack stat
-     */
-    public int getSpecialAttack() {
-        return baseStats.getSpecialAttack();
-    }
-
-    /**
-     * Gets the base Special Defense stat.
-     *
-     * @return the Special Defense stat
-     */
-    public int getSpecialDefense() {
-        return baseStats.getSpecialDefense();
     }
 
     /**
@@ -241,9 +218,11 @@ public class Pokemon {
             types += "/" + secondaryType;
         }
 
-        System.out.printf("%-6s %-12s %-15s %-7d %-5d %-7d %-8d %-9d %-9d %-6d\n", pokedexNumber, name, types,
-                baseStats.getTotal(), baseStats.getHP(), baseStats.getAttack(), baseStats.getDefense(),
-                baseStats.getSpecialAttack(), baseStats.getSpecialDefense(), baseStats.getSpeed());
+        System.out.printf("%-6s %-12s %-15s %-7d %-5d %-7d %-8d %-6d\n", pokedexNumber, name, types,
+    baseStats.getTotal(), baseStats.getHP(), baseStats.getAttack(), baseStats.getDefense(),
+    baseStats.getSpeed()
+);
+
     }
 }
 
@@ -254,12 +233,10 @@ public class Pokemon {
  * Special Defense, and Speed.
  */
 class PokemonBaseStats {
-    private int hp;
-    private int attack;
-    private int defense;
-    private int spAttack;
-    private int spDefense;
-    private int speed;
+    private final int hp;
+    private final int attack;
+    private final int defense;
+    private final int speed;
 
     /**
      * Constructs a PokemonBaseStats object with the given base stat values.
@@ -267,16 +244,12 @@ class PokemonBaseStats {
      * @param hp        the base HP (Hit Points) stat of the Pokémon
      * @param attack    the base Attack stat of the Pokémon
      * @param defense   the base Defense stat of the Pokémon
-     * @param spAttack  the base Special Attack stat of the Pokémon
-     * @param spDefense the base Special Defense stat of the Pokémon
      * @param speed     the base Speed stat of the Pokémon
      */
-    public PokemonBaseStats(int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
+    public PokemonBaseStats(int hp, int attack, int defense, int speed) {
         this.hp = hp;
         this.attack = attack;
         this.defense = defense;
-        this.spAttack = spAttack;
-        this.spDefense = spDefense;
         this.speed = speed;
     }
 
@@ -308,24 +281,6 @@ class PokemonBaseStats {
     }
 
     /**
-     * Gets the base Special Attack stat.
-     *
-     * @return the base Special Attack value
-     */
-    public int getSpecialAttack() {
-        return spAttack;
-    }
-
-    /**
-     * Gets the base Special Defense stat.
-     *
-     * @return the base Special Defense value
-     */
-    public int getSpecialDefense() {
-        return spDefense;
-    }
-
-    /**
      * Gets the base Speed stat.
      *
      * @return the base Speed value
@@ -341,7 +296,7 @@ class PokemonBaseStats {
      *         and Speed
      */
     public int getTotal() {
-        return hp + attack + defense + spAttack + spDefense + speed;
+        return hp + attack + defense  + speed;
     }
 
     /**
