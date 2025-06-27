@@ -41,10 +41,11 @@ public class PokemonManager {
         String secondaryType = null;
         int hp, defense, attack, speed;
         int evolvesFrom, evolvesTo;
+        int baseLevel, evolutionLevel;
 
         System.out.printf("\n--- Add Pokémon ---\n\n");
 
-        // Pokedex Number
+        // Pokédex Number
         do {
             pokedexNumber = readValidInt(scan, "Pokédex number (1-1010)");
 
@@ -53,16 +54,20 @@ public class PokemonManager {
             }
         } while (!isValidDexNumber(pokedexNumber));
 
-        // Name
+        // Name - Pokémon name
         name = readValidString(scan, "name", "[A-Za-z\\s]+");
 
-        // Type 1
-        System.out.println("Choose from: normal, fire, water, electric, grass, ice, fighting, poison, ground, \nflying, psychic, bug, rock, ghost, dragon, dark, steel, fairy");
+        // Type 1 - Pokémon's primary type
+        System.out.println("------------------ CHOOSE TYPE FROM -----------------------------");
+        System.out.println("Normal      Fire       Water     Electric      Grass        Ice");
+        System.out.println("Fighting    Poison     Ground    Flying        Psychic      Bug");
+        System.out.println("Rock        Ghost      Dragon    Dark          Steel        Fairy");
+        System.out.println("------------------------------------------------------------------");
         do {
             primaryType = readValidString(scan, "primary type", "[A-Za-z\\s]+");
         } while (!TypeUtils.isValidType(primaryType));
 
-        // Type 2
+        // Type 2 - Pokémon's secondary type
         System.out.print("Does " + name + " has a secondary type? [Y/N]: ");
         String choice;
         do {
@@ -77,15 +82,23 @@ public class PokemonManager {
             } while (!TypeUtils.isValidType(secondaryType));
         }
 
-        // Evolves from
+        // Base Level
+        baseLevel = readValidInt(scan, "base level");
+
+        // Evolves from - the Pokémon that the current Pokémon transformed from
         do {
             evolvesFrom = readValidInt(scan, "dex number that Pokémon evolves from");
         } while (!isValidDexNumber(evolvesFrom));
 
-        // Evolves to
+        // Evolves to - the Pokémon that the current Pokémon will transform into
         do {
             evolvesTo = readValidInt(scan, "dex number that Pokémon evolves to");
         } while (!isValidDexNumber(evolvesTo));
+
+        // Evolution Level - specific level a Pokémon must reach to evolve into its next form
+        do {
+            evolutionLevel = readValidInt(scan, "evolution level");
+        } while (!isValidDexNumber(evolutionLevel));
 
         // Base Stats
         System.out.printf("\nEnter the Base Stats\n");
@@ -266,7 +279,7 @@ public class PokemonManager {
      * @return {@code true} if valid; {@code false} otherwise
      */
     private boolean isValidDexNumber(int pokedexNumber) {
-        if (pokedexNumber < 1 || pokedexNumber > 1010) {
+        if (pokedexNumber <= 1 || pokedexNumber >= 1010) {
             return false;
         }
     
