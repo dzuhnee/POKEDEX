@@ -230,6 +230,7 @@ class MoveManager {
         String name = inputHelper.inputMoveName(this);
         String description = inputHelper.inputMoveDescription();
         Move.Classification classification = inputHelper.inputMoveClassification();
+        System.out.println("Choose from: normal, fire, water, electric, grass, ice, fighting, poison, ground, \nflying, psychic, bug, rock, ghost, dragon, dark, steel, fairy");
         String primaryType = inputHelper.inputMoveTyping("primary");
         String secondaryType;
 
