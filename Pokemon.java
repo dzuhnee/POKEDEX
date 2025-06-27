@@ -8,13 +8,13 @@ import java.util.Scanner;
  * stats, moves, and held item.
  */
 public class Pokemon {
-    private String pokedexNumber;
+    private int pokedexNumber;
     private String name;
     private String primaryType;
     private String secondaryType;
     private int baseLevel;
-    private String evolvesFrom;
-    private String evolvesTo;
+    private int evolvesFrom;
+    private int evolvesTo;
     private int evolutionLevel;
     private List<Move> moveSet;
     private Item heldItem = null;
@@ -36,9 +36,9 @@ public class Pokemon {
      * @param defense        the base Defense stat
      * @param speed          the base Speed stat
      */
-    public Pokemon(String pokedexNumber, String name, String primaryType, String secondaryType, int baseLevel,
-            String evolvesFrom,
-            String evolvesTo, int evolutionLevel, int hp, int attack, int defense, int speed) {
+    public Pokemon(int pokedexNumber, String name, String primaryType, String secondaryType, int baseLevel,
+            int evolvesFrom,
+            int evolvesTo, int evolutionLevel, int hp, int attack, int defense, int speed) {
         this.pokedexNumber = pokedexNumber;
         this.name = name;
         this.primaryType = primaryType;
@@ -68,7 +68,7 @@ public class Pokemon {
      * @param defense        the base Defense stat
      * @param speed          the base Speed stat
      */
-    public Pokemon(String pokedexNumber, String name, String primaryType, int baseLevel, String evolvesFrom, String evolvesTo,
+    public Pokemon(int pokedexNumber, String name, String primaryType, int baseLevel, int evolvesFrom, int evolvesTo,
             int evolutionLevel, int hp, int attack, int defense, int speed) {
         this(pokedexNumber, name, primaryType, null, baseLevel, evolvesFrom, evolvesTo, evolutionLevel,
                 hp, attack, defense, speed);
@@ -88,7 +88,7 @@ public class Pokemon {
      *
      * @return the Pokédex number
      */
-    public String getPokedexNumber() {
+    public int getPokedexNumber() {
         return pokedexNumber;
     }
 
@@ -124,7 +124,7 @@ public class Pokemon {
      *
      * @return the Pokédex number it evolves from
      */
-    public String getEvolvesFrom() {
+    public int getEvolvesFrom() {
         return evolvesFrom;
     }
 
@@ -133,7 +133,7 @@ public class Pokemon {
      *
      * @return the Pokédex number it evolves to
      */
-    public String getEvolvesTo() {
+    public int getEvolvesTo() {
         return evolvesTo;
     }
 
@@ -218,7 +218,7 @@ public class Pokemon {
             types += "/" + secondaryType;
         }
 
-        System.out.printf("%-6s %-12s %-15s %-7d %-5d %-7d %-8d %-6d\n", pokedexNumber, name, types,
+        System.out.printf("%04d %-12s %-15s %-7d %-5d %-7d %-8d %-6d\n", pokedexNumber, name, types,
     baseStats.getTotal(), baseStats.getHP(), baseStats.getAttack(), baseStats.getDefense(),
     baseStats.getSpeed()
 );

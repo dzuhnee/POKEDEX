@@ -10,6 +10,23 @@ public class PokemonManager {
     private final Scanner scan = new Scanner(System.in);
     private final List<Pokemon> pokemons = new ArrayList<>();
 
+    Pokemon pokemon1 = new Pokemon(1, "Bulbasaur", "Grass", "Poison", 0, 0, 0, 0, 45, 49, 49, 45);
+    Pokemon pokemon2 = new Pokemon(12, "Butterfree", "Bug", "Flying", 0, 0, 0, 0, 60, 45, 50, 70);
+    Pokemon pokemon3 = new Pokemon(25, "Pikachu", "Electric", null, 0, 0, 0, 0, 35, 55, 40, 90);
+
+    /**
+     * Populates the Pokémon list with predefined initial Pokémon.
+     * 
+     * This method adds predefined Pokémon objects (e.g., {@code pokemon1},
+     * {@code pokemon2}, {@code pokemon3}) to the internal Pokémon list
+     * for initial setup or testing purposes.
+     */
+    public void populateInitialPokemon() {
+        pokemons.add(pokemon1);
+        pokemons.add(pokemon2);
+        pokemons.add(pokemon3);
+    }
+
     /**
      * Prompts the user to enter all necessary data to add a new Pokémon.
      * Validates input formats and adds the Pokémon to the list once confirmed.
@@ -18,19 +35,22 @@ public class PokemonManager {
      */
     public boolean addPokemon() {
         // Variables to store data temporarily
-        String pokedexNumber;
+        int pokedexNumber;
         String name;
         String primaryType = null;
         String secondaryType = null;
         int hp, defense, attack, speed;
-        String evolvesFrom, evolvesTo;
+        int evolvesFrom, evolvesTo;
 
         System.out.printf("\n--- Add Pokémon ---\n\n");
 
         // Pokedex Number
         do {
-            pokedexNumber = readValidString(scan,
-                    "Pokédex number (format as 4 digits with leading zeros, e.g., 0001)", "^\\d{4}$");
+            pokedexNumber = readValidInt(scan, "Pokédex number (0-1010)");
+
+            if (!isValidDexNumber(pokedexNumber)) {
+                System.out.println("Invalid input. Please try again.");
+            }
         } while (!isValidDexNumber(pokedexNumber));
 
         // Name
@@ -58,12 +78,12 @@ public class PokemonManager {
 
         // Evolves from
         do {
-            evolvesFrom = readValidString(scan, "dex number that Pokémon evolves from", "^\\d{4}$");
+            evolvesFrom = readValidInt(scan, "dex number that Pokémon evolves from");
         } while (!isValidDexNumber(evolvesFrom));
 
         // Evolves to
         do {
-            evolvesTo = readValidString(scan, "dex number that Pokémon evolves to", "^\\d{4}$");
+            evolvesTo = readValidInt(scan, "dex number that Pokémon evolves to");
         } while (!isValidDexNumber(evolvesTo));
 
         // Base Stats
@@ -76,10 +96,10 @@ public class PokemonManager {
         // Instantiate Pokémon
         Pokemon pokemon;
         if (secondaryType != null) {
-            pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, 0, null, null,
+            pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, 0, 0, 0,
                     0, hp, attack, defense, speed);
         } else {
-            pokemon = new Pokemon(pokedexNumber, name, primaryType, 0, null, null, 0,
+            pokemon = new Pokemon(pokedexNumber, name, primaryType, 0, 0, 0, 0,
                     hp, attack, defense, speed);
         }
 
@@ -184,7 +204,7 @@ public class PokemonManager {
      *
      * @param n the Pokédex number to search for (must be 4 digits)
      */
-    public void searchByPokedexNumber(String n) {
+    public void searchByPokedexNumber(int n) {
         boolean isFound = false;
 
         divider();
@@ -192,7 +212,7 @@ public class PokemonManager {
         divider();
 
         for (Pokemon p : pokemons) {
-            if (p.getPokedexNumber().equalsIgnoreCase(n)) {
+            if (p.getPokedexNumber() == n) {
                 p.display();
                 isFound = true;
             }
@@ -228,7 +248,7 @@ public class PokemonManager {
                 searchByType(type);
                 break;
             case "3":
-                String num = readValidString(scan, "Pokédex number (must be 4 digits)", "^\\d{4}$");
+                int num = readValidInt(scan, "Pokédex number");
                 searchByPokedexNumber(num);
                 break;
             default:
@@ -237,17 +257,15 @@ public class PokemonManager {
     }
 
     /**
-     * Validates that the given Pokédex number is in the correct format and range
-     * (0001 to 1010).
+     * Validates that the given Pokédex number is in the correct range (0001 to
+     * 1010).
      *
      * @param pokedexNumber the number to validate
      * @return {@code true} if valid; {@code false} otherwise
      */
-    private static boolean isValidDexNumber(String pokedexNumber) {
-        // Checks if input is unique
-        if (pokedexNumber.matches("\\d{4}")) {
-            int number = Integer.parseInt(pokedexNumber);
-            return number >= 1 && number <= 1010;
+    private static boolean isValidDexNumber(int pokedexNumber) {
+        if (pokedexNumber >= 0 && pokedexNumber <= 1010) {
+            return true;
         }
         return false;
     }
@@ -309,8 +327,8 @@ public class PokemonManager {
      * Prints the header row for Pokémon display output.
      */
     private static void header() {
-        System.out.printf("%-6s %-12s %-15s %-7s %-5s %-7s %-8s %-6s\n",
+        System.out.printf("%-4s %-12s %-15s %-7s %-5s %-7s %-8s %-6s\n",
                 "#", "Name", "Type(s)", "Total", "HP", "Attack", "Defense", "Speed");
-    }    
+    }
 
 }
