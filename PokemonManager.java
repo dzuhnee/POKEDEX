@@ -1,5 +1,5 @@
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -22,7 +22,7 @@ public class PokemonManager {
         String name;
         String primaryType = null;
         String secondaryType = null;
-        int hp, defense, spDefense, attack, spAttack, speed;
+        int hp, defense, attack, speed;
         String evolvesFrom, evolvesTo;
 
         System.out.printf("\n--- Add Pokémon ---\n\n");
@@ -71,18 +71,16 @@ public class PokemonManager {
         hp = PokemonBaseStats.readValidBaseStat(scan, "HP");
         attack = PokemonBaseStats.readValidBaseStat(scan, "Attack");
         defense = PokemonBaseStats.readValidBaseStat(scan, "Defense");
-        spAttack = PokemonBaseStats.readValidBaseStat(scan, "Special Attack");
-        spDefense = PokemonBaseStats.readValidBaseStat(scan, "Special Defense");
         speed = PokemonBaseStats.readValidBaseStat(scan, "Speed");
 
         // Instantiate Pokémon
         Pokemon pokemon;
         if (secondaryType != null) {
             pokemon = new Pokemon(pokedexNumber, name, primaryType, secondaryType, 0, null, null,
-                    0, hp, attack, defense, spAttack, spDefense, speed);
+                    0, hp, attack, defense, speed);
         } else {
             pokemon = new Pokemon(pokedexNumber, name, primaryType, 0, null, null, 0,
-                    hp, attack, defense, spAttack, spDefense, speed);
+                    hp, attack, defense, speed);
         }
 
         // Confirmation
@@ -304,16 +302,15 @@ public class PokemonManager {
      */
     private static void divider() {
         System.out.println(
-                "--------------------------------------------------------------------------------------------");
+                "------------------------------------------------------------------------------");
     }
 
     /**
      * Prints the header row for Pokémon display output.
      */
     private static void header() {
-        System.out.printf("%-6s %-12s %-15s %-7s %-5s %-7s %-8s %-9s %-9s %-6s\n", "#", "Name", "Type(s)", "Total",
-                "HP",
-                "Attack", "Defense", "Sp.Atk", "Sp.Def", "Speed");
-    }
+        System.out.printf("%-6s %-12s %-15s %-7s %-5s %-7s %-8s %-6s\n",
+                "#", "Name", "Type(s)", "Total", "HP", "Attack", "Defense", "Speed");
+    }    
 
 }
