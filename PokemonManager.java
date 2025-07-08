@@ -158,6 +158,23 @@ public class PokemonManager {
         System.out.println("");
     }
 
+    public Pokemon getPokemonByDex(int pokedexNumber) {
+        for (Pokemon p : pokemons) {
+            if (p.getPokedexNumber() == pokedexNumber) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public String getNameByDex(int pokedexNumber) {
+        Pokemon p = getPokemonByDex(pokedexNumber);
+        if (p != null) {
+            return p.getName();
+        }
+        return null;
+    }
+
     /**
      * Searches the Pokémon list for any Pokémon whose name contains the given
      * string.

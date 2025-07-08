@@ -208,6 +208,91 @@ public class Pokemon {
         System.out.println(this.name + " cries!");
     }
 
+    public boolean learnMove(Move move) {
+        // Check if type is compatible
+        if (!isTypeCompatible(move)) {
+            System.out.println(this.name + " can't learn " + move.getName() + " because type is incompatible!");
+            return false;
+        }
+
+        // Check if move is in the set already
+        if (this.moveSet.contains(move)) {
+            System.out.println(this.name + " already knows " + move.getName() + ".");
+            return false;
+        }
+
+        // Check if adding a new move will exceed the limit
+        if (this.moveSet.size() < 4) {
+            this.moveSet.add(move);
+            System.out.println(move.getName() + " learned successfully!");
+            return true;
+        } else {
+            System.out.println(this.name
+                    + " already knows 4 moves! A move must be forgotten to learn a new one unless it's an HM.");
+            System.out.print("Current moves: ");
+            for (Move m : moveSet) {
+                System.out.print(m.getName() + " ");
+            }
+            System.out.println();
+            return false;
+        }
+    }
+
+    public void forgetMove(Move move) {
+        if (!moveSet.contains(move)) {
+            System.out.println(name + " does not know " + move.getName() + ".");
+            return;
+        }
+
+        if (move.getClassification() == Move.Classification.HM) {
+            System.out.println(move.getName() + " is an HM move and cannot be forgotten.");
+        } else {
+            moveSet.remove(move);
+            System.out.println(move.getName() + " has been forgotten by " + name + ".");
+        }
+    }
+
+    public void increaseStat(String statName, int amount) {
+        switch (statName.toLowerCase()) {
+            case "hp":
+                baseStats.setHP(amount);
+                break;
+            case "attack":
+                baseStats.setAttack(amount);
+                break;
+            case "defense":
+                baseStats.setDefense(amount);
+                break;
+            case "speed":
+                baseStats.setSpeed(amount);
+                break;
+            default:
+                System.out.println("Invalid stat: " + statName);
+        }
+    }
+
+    public boolean levelUpWithRareCandy(PokemonManager manager) {
+        this.baseLevel++;
+
+        int newHP = (int) (baseStats.getHP() * 0.10);
+        int newAttack = (int) (baseStats.getAttack() * 0.10);
+        int newDefense = (int) (baseStats.getDefense() * 0.10);
+        int newSpeed = (int) (baseStats.getSpeed() * 0.10);
+
+        baseStats.setHP(newHP);
+        baseStats.setAttack(newAttack);
+        baseStats.setDefense(newDefense);
+        baseStats.setSpeed(newSpeed);
+
+        System.out.println(this.name + " leveled up to level + " + this.baseLevel);
+
+        if (this.baseLevel >= this.evolutionLevel && this.evolvesTo != 0) {
+            evolve(manager);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Displays the Pokémon's details including name, types, and base stats in a
      * formatted line.
@@ -219,13 +304,86 @@ public class Pokemon {
         }
 
         System.out.printf("%04d %-12s %-15s %-7d %-5d %-7d %-8d %-6d\n", pokedexNumber, name, types,
-    baseStats.getTotal(), baseStats.getHP(), baseStats.getAttack(), baseStats.getDefense(),
-    baseStats.getSpeed()
-);
+                baseStats.getTotal(), baseStats.getHP(), baseStats.getAttack(), baseStats.getDefense(),
+                baseStats.getSpeed());
 
     }
-}
 
+    private boolean isTypeCompatible(Move move) {
+        // Check Type 1
+        if (this.primaryType != null && this.primaryType.equalsIgnoreCase(move.getPrimaryType())) {
+            return true;
+        }
+        if (this.primaryType != null && move.getSecondaryType() != null
+                && this.primaryType.equalsIgnoreCase(move.getSecondaryType())) {
+            return true;
+        }
+
+        // Check Type 2 (if it exists!)
+        if (this.secondaryType != null && this.secondaryType.equalsIgnoreCase(move.getPrimaryType())) {
+            return true;
+        }
+        if (this.secondaryType != null && move.getSecondaryType() != null
+                && this.secondaryType.equalsIgnoreCase(move.getSecondaryType())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void evolve(PokemonManager manager) {
+        System.out.println(this.name + " is evolving. . .");
+
+        Pokemon evolved = manager.getPokemonByDex(this.evolvesTo);
+
+        if (evolved == null) {
+            System.out.println("Evolved form not found in database.");
+            return;
+        }
+        this.name = evolved.getName();
+        this.evolvesFrom = this.pokedexNumber;
+        this.pokedexNumber = evolved.getPokedexNumber();
+        this.evolvesTo = evolved.getEvolvesTo();
+
+        this.baseStats.setHP(evolved.getHP() - this.getHP());
+        this.baseStats.setAttack(evolved.getAttack() - this.getAttack());
+        this.baseStats.setDefense(evolved.getDefense() - this.getDefense());
+        this.baseStats.setSpeed(evolved.getSpeed() - this.getSpeed());
+
+        System.out.println(this.name + " has evolved successfully!");
+    }
+
+    public boolean evolveUsingStone(String stoneType, PokemonManager manager) {
+        if (!TypeUtils.isValidType(stoneType)) {
+            System.out.println("Invalid stone type: " + stoneType);
+            return false;
+        }
+
+        if (this.evolvesTo == 0) {
+            System.out.println(this.name + " has no stone-based evolution.");
+            return false;
+        }
+
+        // Get the evolved Pokémon data
+        Pokemon evolved = manager.getPokemonByDex(this.evolvesTo);
+        if (evolved == null) {
+            System.out.println("Evolved form not found in database.");
+            return false;
+        }
+
+        // Evolution is allowed only if the evolved Pokémon shares the stone type
+        if (!evolved.getPrimaryType().equalsIgnoreCase(stoneType)
+                && (evolved.getSecondaryType() == null || !evolved.getSecondaryType().equalsIgnoreCase(stoneType))) {
+            System.out.println("The " + stoneType + " Stone has no effect on " + this.name + ".");
+            return false;
+        }
+
+        // Proceed with evolution
+        evolve(manager);
+        return true;
+    }
+
+}
 
 /**
  * This class represents the base stats of a Pokémon, including HP, Attack,
@@ -233,18 +391,18 @@ public class Pokemon {
  * Special Defense, and Speed.
  */
 class PokemonBaseStats {
-    private final int hp;
-    private final int attack;
-    private final int defense;
-    private final int speed;
+    private int hp;
+    private int attack;
+    private int defense;
+    private int speed;
 
     /**
      * Constructs a PokemonBaseStats object with the given base stat values.
      *
-     * @param hp        the base HP (Hit Points) stat of the Pokémon
-     * @param attack    the base Attack stat of the Pokémon
-     * @param defense   the base Defense stat of the Pokémon
-     * @param speed     the base Speed stat of the Pokémon
+     * @param hp      the base HP (Hit Points) stat of the Pokémon
+     * @param attack  the base Attack stat of the Pokémon
+     * @param defense the base Defense stat of the Pokémon
+     * @param speed   the base Speed stat of the Pokémon
      */
     public PokemonBaseStats(int hp, int attack, int defense, int speed) {
         this.hp = hp;
@@ -289,6 +447,22 @@ class PokemonBaseStats {
         return speed;
     }
 
+    public void setHP(int hp) {
+        this.hp += hp;
+    }
+
+    public void setAttack(int attack) {
+        this.attack += attack;
+    }
+
+    public void setDefense(int defense) {
+        this.defense += defense;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed += speed;
+    }
+
     /**
      * Calculates and returns the total of all base stats.
      *
@@ -296,7 +470,7 @@ class PokemonBaseStats {
      *         and Speed
      */
     public int getTotal() {
-        return hp + attack + defense  + speed;
+        return hp + attack + defense + speed;
     }
 
     /**
