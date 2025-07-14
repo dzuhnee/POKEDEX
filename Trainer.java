@@ -176,4 +176,32 @@ public class Trainer {
     public boolean releasePokemon(Pokemon p) {
         return lineup.remove(p) || storage.remove(p);
     }
+
+    /*
+     * private int trainerID;
+     * private String name;
+     * private LocalDate birthdate;
+     * private String sex;
+     * private String hometown;
+     * private String description;
+     * private int money;
+     * 
+     * private List<Pokemon> lineup; // Up to 6
+     * private List<Pokemon> storage; // Storage for additional pokemon
+     * private List<Item> itemBag; // Up to 50 (max 10 unique)
+     */
+    public String displayProfile() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(String.format("ID         : %04d\n", trainerID));
+        sb.append(String.format("Name       : %s\n", name));
+        sb.append(String.format("Sex        : %s\n", sex));
+        sb.append(String.format("Birthdate  : %s\n", birthdate.toString()));
+        sb.append(String.format("Hometown   : %s\n", hometown));
+        sb.append(String.format("Money      : ₱%,d\n", money));
+        sb.append(String.format("Description: %s\n", description));
+
+        return sb.toString();
+    }
+
 }

@@ -152,7 +152,7 @@ public class PokemonManager {
         divider();
 
         for (Pokemon p : pokemons) {
-            p.display();
+            p.displayInfo();
         }
 
         System.out.println("");
@@ -189,7 +189,7 @@ public class PokemonManager {
                 divider();
                 header();
                 divider();
-                p.display();
+                p.displayInfo();
                 isFound = true;
             }
         }
@@ -219,7 +219,7 @@ public class PokemonManager {
     
             if ((primary != null && primary.toLowerCase().contains(s.toLowerCase())) ||
                 (secondary != null && secondary.toLowerCase().contains(s.toLowerCase()))) {
-                p.display();
+                p.displayInfo();
                 foundMatch = true;
             }
         }
@@ -245,7 +245,7 @@ public class PokemonManager {
 
         for (Pokemon p : pokemons) {
             if (p.getPokedexNumber() == n) {
-                p.display();
+                p.displayInfo();
                 isFound = true;
             }
         }

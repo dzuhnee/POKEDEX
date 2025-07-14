@@ -201,54 +201,70 @@ public class Pokemon {
         return heldItem;
     }
 
+    public void setHeldItem(Item item) {
+        this.heldItem = item;
+    }
+
     /**
      * Simulates the Pokémon crying (prints a simple message).
      */
-    public void cry() {
-        System.out.println(this.name + " cries!");
+    public String cry() {
+        String sound = " cries!";
+
+        if (name.toLowerCase().contains("chu")) {
+            sound = " squeaks: Pika Pika~!";
+        } else if (primaryType != null) {
+            switch (primaryType.toLowerCase()) {
+                case "fire":
+                    sound = " roars: Fwooosh 🔥!";
+                    break;
+                case "water":
+                    sound = " splashes: Bloo bloop 💧!";
+                    break;
+                case "electric":
+                    sound = " zaps: Bzzzt ⚡!";
+                    break;
+                case "grass":
+                    sound = " rustles: Shwaa 🌿!";
+                    break;
+                case "ghost":
+                    sound = " wails: Woooo 👻...";
+                    break;
+                default:
+                    sound = " cries!";
+            }
+        }
+
+        return this.name + sound;
     }
 
     public boolean learnMove(Move move) {
         // Check if type is compatible
         if (!isTypeCompatible(move)) {
-            System.out.println(this.name + " can't learn " + move.getName() + " because type is incompatible!");
             return false;
         }
 
         // Check if move is in the set already
         if (this.moveSet.contains(move)) {
-            System.out.println(this.name + " already knows " + move.getName() + ".");
             return false;
         }
 
         // Check if adding a new move will exceed the limit
         if (this.moveSet.size() < 4) {
             this.moveSet.add(move);
-            System.out.println(move.getName() + " learned successfully!");
             return true;
         } else {
-            System.out.println(this.name
-                    + " already knows 4 moves! A move must be forgotten to learn a new one unless it's an HM.");
-            System.out.print("Current moves: ");
-            for (Move m : moveSet) {
-                System.out.print(m.getName() + " ");
-            }
-            System.out.println();
             return false;
         }
     }
 
     public void forgetMove(Move move) {
         if (!moveSet.contains(move)) {
-            System.out.println(name + " does not know " + move.getName() + ".");
             return;
         }
 
-        if (move.getClassification() == Move.Classification.HM) {
-            System.out.println(move.getName() + " is an HM move and cannot be forgotten.");
-        } else {
+        if (move.getClassification() != Move.Classification.HM) {
             moveSet.remove(move);
-            System.out.println(move.getName() + " has been forgotten by " + name + ".");
         }
     }
 
@@ -266,8 +282,6 @@ public class Pokemon {
             case "speed":
                 baseStats.setSpeed(amount);
                 break;
-            default:
-                System.out.println("Invalid stat: " + statName);
         }
     }
 
@@ -284,8 +298,6 @@ public class Pokemon {
         baseStats.setDefense(newDefense);
         baseStats.setSpeed(newSpeed);
 
-        System.out.println(this.name + " leveled up to level + " + this.baseLevel);
-
         if (this.baseLevel >= this.evolutionLevel && this.evolvesTo != 0) {
             evolve(manager);
             return true;
@@ -297,16 +309,16 @@ public class Pokemon {
      * Displays the Pokémon's details including name, types, and base stats in a
      * formatted line.
      */
-    public void display() {
+    public String displayInfo() {
         String types = primaryType;
+
         if (secondaryType != null && !secondaryType.isEmpty()) {
             types += "/" + secondaryType;
         }
 
-        System.out.printf("%04d %-12s %-15s %-7d %-5d %-7d %-8d %-6d\n", pokedexNumber, name, types,
+        return String.format("%04d %-12s %-15s %-7d %-5d %-7d %-8d %-6d\n", pokedexNumber, name, types,
                 baseStats.getTotal(), baseStats.getHP(), baseStats.getAttack(), baseStats.getDefense(),
                 baseStats.getSpeed());
-
     }
 
     private boolean isTypeCompatible(Move move) {
@@ -332,14 +344,12 @@ public class Pokemon {
     }
 
     private void evolve(PokemonManager manager) {
-        System.out.println(this.name + " is evolving. . .");
-
         Pokemon evolved = manager.getPokemonByDex(this.evolvesTo);
 
         if (evolved == null) {
-            System.out.println("Evolved form not found in database.");
             return;
         }
+
         this.name = evolved.getName();
         this.evolvesFrom = this.pokedexNumber;
         this.pokedexNumber = evolved.getPokedexNumber();
@@ -350,31 +360,26 @@ public class Pokemon {
         this.baseStats.setDefense(evolved.getDefense() - this.getDefense());
         this.baseStats.setSpeed(evolved.getSpeed() - this.getSpeed());
 
-        System.out.println(this.name + " has evolved successfully!");
     }
 
     public boolean evolveUsingStone(String stoneType, PokemonManager manager) {
         if (!TypeUtils.isValidType(stoneType)) {
-            System.out.println("Invalid stone type: " + stoneType);
             return false;
         }
 
         if (this.evolvesTo == 0) {
-            System.out.println(this.name + " has no stone-based evolution.");
             return false;
         }
 
         // Get the evolved Pokémon data
         Pokemon evolved = manager.getPokemonByDex(this.evolvesTo);
         if (evolved == null) {
-            System.out.println("Evolved form not found in database.");
             return false;
         }
 
         // Evolution is allowed only if the evolved Pokémon shares the stone type
         if (!evolved.getPrimaryType().equalsIgnoreCase(stoneType)
                 && (evolved.getSecondaryType() == null || !evolved.getSecondaryType().equalsIgnoreCase(stoneType))) {
-            System.out.println("The " + stoneType + " Stone has no effect on " + this.name + ".");
             return false;
         }
 
