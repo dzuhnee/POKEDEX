@@ -5,108 +5,68 @@ import java.util.Scanner;
 
 public class TrainerManager {
     private final List<Trainer> trainers = new ArrayList<>();
-    Scanner scan = new Scanner(System.in);
 
-    public boolean addTrainer() {
-        int trainerID;
-        String name;
-        LocalDate birthdate;
-        String sex;
-        String hometown;
-        String description;
-        
-        System.out.println("--- Add Trainer ---");
-        trainerID = readValidInt(scan, "trainer ID");
-        name = readValidString(scan, "name", "[A-Za-z\\\\s]+");
-        
-        System.out.print("Enter birthdate (YYYY-MM-DD): ");
-        String input = scan.nextLine();
-        try {
-            birthdate = LocalDate.parse(input);
-        } catch (Exception e) {
-            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
-        }
-
-        sex = readValidString(scan, "sex", "[A-Za-z\\\\s]+");
-        hometown = readValidString(scan, "hometown", "[A-Za-z\\\\s]+");
-        description = readValidString(scan, "description", "[A-Za-z\\\\s]+");
-
-
-        Trainer trainer = new Trainer(trainerID, name, birthdate, sex, hometown, description);
-
-        System.out.printf("Add" + name + " to your Trainers [Y/N]: ");
-        String c;
-        do {
-            c = scan.nextLine();
-            if (!c.equalsIgnoreCase("Y") && !c.equalsIgnoreCase("N")) {
-                System.out.print("Invalid input. Please try again: ");
-            }
-        } while (!c.equalsIgnoreCase("Y") && !c.equalsIgnoreCase("N"));
-
-        if (c.equalsIgnoreCase("Y")) {
-            trainers.add(trainer);
-            System.out.println("Trainer \"" + name + "\" added successfully!");
-            System.out.println("");
-            return true;
-        }
-
-        return false;
+    public TrainerManager() {
+        populateInitialTrainers();
     }
 
-    public void viewTrainers() {
-        System.out.println("--- View Trainers ---");
+    public boolean addTrainer(int id, String name, LocalDate birthdate, String sex, String hometown, String description) {
+        if (name == null || name.trim().isEmpty() || birthdate == null || sex == null || hometown == null || description == null) {
+            return false;
+        }
+
+        if (getTrainerByID(id) != null) {
+            return false;
+        }
+
+        Trainer trainer = new Trainer(id, name, birthdate, sex, hometown, description);
+        trainers.add(trainer);
+        return true;
+    }
+
+    public Trainer getTrainerByID(int trainerID) {
         for (Trainer t : trainers) {
-            t.displayProfile();
-            System.out.println("-------------------------------------------------------------------------------");
+            if (t.getTrainerID() == trainerID) {
+                return t;
+            }
         }
+        return null;
     }
 
-    public List<Trainer> searchTrainers() {
-        List<Trainer> foundTrainers = new ArrayList<>();
+    public List<Trainer> getAllTrainers() {
+        return new ArrayList<>(trainers);
+    }
 
-        System.out.println("--- Search Trainer ---");
-        System.out.print("Enter any keyword: ");
-        String keyword = scan.nextLine();
-        String k = keyword.toLowerCase();
+    public List<String> getAllTrainerProfiles() {
+        List<String> profiles = new ArrayList<>();
 
         for (Trainer t : trainers) {
-            if (t.getName().toLowerCase().contains(k) || t.getSex().toLowerCase().contains(k) ||
-                    t.getBirthdate().toString().contains(k) || String.valueOf(t.getTrainerID()).contains(k) ||
-                    t.getDescription().toLowerCase().contains(k) || t.getHometown().toLowerCase().contains(k)) {
-                foundTrainers.add(t);
-            }
+            profiles.add(t.displayProfile());
         }
-
-        return foundTrainers;
+        return profiles;
     }
 
-    public int readValidInt(Scanner scan, String attribute) {
-        int input;
+    public List<Trainer> searchTrainers(String keyword) {
+        List<Trainer> matches = new ArrayList<>();
+        String lowerString = keyword.toLowerCase();
 
-        while (true) {
-            System.out.print("Enter " + attribute + ": ");
-
-            try {
-                input = Integer.parseInt(scan.nextLine());
-                return input;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please try again.");
+        for (Trainer t : trainers) {
+            if (t.getName().toLowerCase().contains(lowerString) ||
+                    t.getSex().toLowerCase().contains(lowerString) ||
+                    t.getBirthdate().toString().toLowerCase().contains(lowerString) || // Convert date to string for search
+                    String.valueOf(t.getTrainerID()).contains(lowerString) || // Convert ID to string for search
+                    t.getDescription().toLowerCase().contains(lowerString) ||
+                    t.getHometown().toLowerCase().contains(lowerString)) {
+                matches.add(t);
             }
         }
+        return matches;
     }
 
-    public static String readValidString(Scanner scan, String attribute, String regex) {
-        String input;
-
-        while (true) {
-            System.out.print("Enter " + attribute + ": ");
-            input = scan.nextLine().trim();
-
-            if (!input.matches(regex) || input.isEmpty()) {
-                System.out.println("Input is invalid or empty. Please try again!");
-            } else {
-                return input;
-            }
+    public void populateInitialTrainers() {
+        if (trainers.isEmpty()) {
+            trainers.add(new Trainer(1001, "Kyle", LocalDate.of(2006, 1, 21), "Female", "Cabanatuan City, Nueva Ecija", "A determined Pokémon Trainer aiming to be a Pokémon Master."));
+            trainers.add(new Trainer(1002, "Ella", LocalDate.of(2005, 11, 20), "Female", "Bocaue, Bulacan", "A Pokémon Coordinator with a cheerful personality."));
         }
     }
 }

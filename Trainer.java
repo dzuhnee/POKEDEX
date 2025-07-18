@@ -1,7 +1,6 @@
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Trainer {
     // Attributes
@@ -16,6 +15,8 @@ public class Trainer {
     private List<Pokemon> lineup; // Up to 6
     private List<Pokemon> storage; // Storage for additional pokemon
     private List<Item> itemBag; // Up to 50 (max 10 unique)
+    private final int MAX_BAG_SIZE = 50;
+    private final int MAX_UNIQUE_TYPES = 10;
 
     // Constructor
     public Trainer(int trainerId, String name, LocalDate birthdate, String sex, String hometown, String description) {
@@ -70,75 +71,141 @@ public class Trainer {
     }
 
     public List<Item> getItemBag() {
-        return itemBag;
+        return new ArrayList<>(itemBag);
     }
 
-    // Methods
-    public boolean buyItem(Item item, Scanner scanner) {
-        if (money < item.getBuyingPrice())
-            return false;
-
-        // Count unique items
-        boolean isAlreadyOwned = false;
-        List<String> seenNames = new ArrayList<>();
-        for (Item i : itemBag) {
-            if (!seenNames.contains(i.getName())) {
-                seenNames.add(i.getName());
-            }
-            if (i.getName().equals(item.getName())) {
-                isAlreadyOwned = true;
-            }
+    // Setter for money
+    public void addMoney(int amount) {
+        if (amount > 0) {
+            this.money += amount;
         }
-
-        if (!isAlreadyOwned && seenNames.size() >= 10) {
-            System.out.println("Cannot have more than 10 unique item types.");
-            return false;
-        }
-
-        if (itemBag.size() >= 50) {
-            System.out.println("Item bag is full. Please choose an item to discard:");
-
-            // Display all items
-            for (int i = 0; i < itemBag.size(); i++) {
-                System.out.println("[" + i + "] " + itemBag.get(i).getName());
-            }
-
-            int indexToRemove = -1;
-            while (indexToRemove < 0 || indexToRemove >= itemBag.size()) {
-                System.out.print("Enter index of item to discard: ");
-                try {
-                    indexToRemove = Integer.parseInt(scanner.nextLine());
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                }
-            }
-
-            Item removed = itemBag.remove(indexToRemove);
-            System.out.println(removed.getName() + " discarded.");
-        }
-
-        itemBag.add(item);
-        money -= item.getBuyingPrice();
-        return true;
     }
 
-    public boolean sellItem(Item item) {
-        if (itemBag.remove(item)) {
-            money += item.getSellingPrice();
+    public boolean subtractMoney(int amount) {
+        if (amount > 0 && this.money >= amount) {
+            this.money -= amount;
             return true;
         }
         return false;
     }
 
-    public boolean useItem(Pokemon pokemon, Item item) {
-        if (itemBag.contains(item)) {
-            boolean success; // = item.applyEffect(pokemon)
-            if (success == true) { // remove true
-                itemBag.remove(item);
+    // Methods
+
+    public int getItemQuantity(String itemName) {
+        int ctr = 0;
+        for (Item item : itemBag) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                ctr++;
             }
-            return true; // change to success
+        }
+        return ctr;
+    }
+
+    public int getTotalItemCount() {
+        return itemBag.size();
+    }
+
+    public int getUniqueItemTypeCount() {
+        List<String> uniqueNames = new ArrayList<>();
+
+        for (Item item : itemBag) {
+            if (!uniqueNames.contains(item.getName())) {
+                uniqueNames.add(item.getName());
+            }
+        }
+        return uniqueNames.size();
+    }
+
+    public boolean addItemToBag(Item item, int quantity) {
+        if (quantity <= 0) {
+            return false;
+        }
+        if (getItemQuantity(item.getName()) == 0 && getUniqueItemTypeCount() >= MAX_UNIQUE_TYPES) {
+            return false; // GUI will need to display this message
+        }
+
+        if (getTotalItemCount() + quantity > MAX_BAG_SIZE) {
+            // GUI will need to display this message and potentially prompt for discard
+            return false;
+        }
+
+        for (int i = 0; i < quantity; i++) {
+            itemBag.add(item);
+        }
+        return true;
+    }
+
+    public boolean removeItemFromBag(String itemName, int quantity) {
+        if (quantity <= 0) return false;
+
+        if (getItemQuantity(itemName) < quantity) {
+            return false; // Not enough items to remove
+        }
+
+        int removedCount = 0;
+        for (int i = itemBag.size() - 1; i >= 0 && removedCount < quantity; i--) {
+            if (itemBag.get(i).getName().equalsIgnoreCase(itemName)) {
+                itemBag.remove(i);
+                removedCount++;
+            }
+        }
+        return removedCount == quantity;
+    }
+
+    public boolean processPurchase(Item shopItem, int quantity) {
+        int totalCost = shopItem.getBuyingPrice() * quantity;
+        if (totalCost == -1 || totalCost > money) {
+            return false; // Item not for sale or not enough money
+        }
+
+        if (getItemQuantity(shopItem.getName()) == 0 && getUniqueItemTypeCount() >= MAX_UNIQUE_TYPES) {
+            return false; // GUI handles message
+        }
+
+        if (getTotalItemCount() + quantity > MAX_BAG_SIZE) {
+            return false; // GUI handles message and discard prompt
+        }
+
+        if (subtractMoney(totalCost)) {
+            for (int i = 0; i < quantity; i++) {
+                itemBag.add(shopItem);
+            }
+            return true;
         }
         return false;
+    }
+
+    public boolean processSale(Item shopItem, int quantity) {
+        int totalProceeds = shopItem.getSellingPrice() * quantity;
+
+        if (totalProceeds == -1 || getItemQuantity(shopItem.getName()) < quantity) {
+            return false;
+        }
+
+        if (removeItemFromBag(shopItem.getName(), quantity)) {
+            addMoney(totalProceeds);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean useItem(Item item, Pokemon pokemon, PokemonManager pokemonManager) {
+        if (item == null || pokemon == null || pokemonManager == null) {
+            return false;
+        }
+
+        if (getItemQuantity(item.getName()) <= 0) {
+            return false;
+        }
+
+        item.use(pokemon, pokemonManager);
+
+        boolean itemConsumed = true;
+
+        if (itemConsumed) {
+            return removeItemFromBag(item.getName(), 1);
+        }
+        return true; // Item used, but not consumed (e.g., a held item being applied)
     }
 
     public boolean teachMove(Pokemon pokemon, Move move) {
@@ -151,7 +218,7 @@ public class Trainer {
             return true;
         } else {
             storage.add(p);
-            return false;
+            return false; // Pokemon added to storage, not lineup
         }
     }
 
@@ -185,7 +252,7 @@ public class Trainer {
      * private String hometown;
      * private String description;
      * private int money;
-     * 
+     *
      * private List<Pokemon> lineup; // Up to 6
      * private List<Pokemon> storage; // Storage for additional pokemon
      * private List<Item> itemBag; // Up to 50 (max 10 unique)
