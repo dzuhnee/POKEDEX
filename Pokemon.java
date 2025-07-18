@@ -241,33 +241,34 @@ public class Pokemon {
     public boolean learnMove(Move move) {
         // Check if type is compatible
         if (!isTypeCompatible(move)) {
-            return false;
+            return false; // For GUI: Display "name cannot learn move"
         }
 
         // Check if move is in the set already
         if (this.moveSet.contains(move)) {
-            return false;
+            return false; // For GUI: Display "name already knows move"
         }
 
         // Check if adding a new move will exceed the limit
         if (this.moveSet.size() < 4) {
             this.moveSet.add(move);
-            return true;
+            return true; // For GUI: Display "name learned move successfully"
         } else {
-            return false;
+            return false; // For GUI: Display "name alr knows 4 moves. Do you want to forget bla bla"
         }
     }
 
     public void forgetMove(Move move) {
         if (!moveSet.contains(move)) {
-            return;
+            return; // GUI: name doesnt know move
         }
 
         if (move.getClassification() != Move.Classification.HM) {
-            moveSet.remove(move);
-        }
+            moveSet.remove(move); // success message
+        } // otherwise, "move is an HM and cannot be forgotten"
     }
 
+    // add display messages sa GUI na lang
     public void increaseStat(String statName, int amount) {
         switch (statName.toLowerCase()) {
             case "hp":
@@ -293,14 +294,13 @@ public class Pokemon {
         int newDefense = (int) (baseStats.getDefense() * 0.10);
         int newSpeed = (int) (baseStats.getSpeed() * 0.10);
 
-        baseStats.setHP(newHP);
-        baseStats.setAttack(newAttack);
-        baseStats.setDefense(newDefense);
-        baseStats.setSpeed(newSpeed);
+        baseStats.addHP(newHP);
+        baseStats.addAttack(newAttack);
+        baseStats.addDefense(newDefense);
+        baseStats.addSpeed(newSpeed);
 
         if (this.baseLevel >= this.evolutionLevel && this.evolvesTo != 0) {
-            evolve(manager);
-            return true;
+            return evolve(manager);
         }
         return false;
     }
@@ -343,32 +343,38 @@ public class Pokemon {
         return false;
     }
 
-    private void evolve(PokemonManager manager) {
+    private boolean evolve(PokemonManager manager) {
         Pokemon evolved = manager.getPokemonByDex(this.evolvesTo);
 
         if (evolved == null) {
-            return;
+            return false; // Error Message
         }
 
+        // name is evolving...!
         this.name = evolved.getName();
         this.evolvesFrom = this.pokedexNumber;
         this.pokedexNumber = evolved.getPokedexNumber();
+        this.primaryType = evolved.getPrimaryType();
+        this.secondaryType = evolved.getSecondaryType();
         this.evolvesTo = evolved.getEvolvesTo();
+        this.evolutionLevel = evolved.getEvolutionLevel();
 
-        this.baseStats.setHP(evolved.getHP() - this.getHP());
-        this.baseStats.setAttack(evolved.getAttack() - this.getAttack());
-        this.baseStats.setDefense(evolved.getDefense() - this.getDefense());
-        this.baseStats.setSpeed(evolved.getSpeed() - this.getSpeed());
+        this.baseStats.setHP(evolved.getHP());
+        this.baseStats.setAttack(evolved.getAttack());
+        this.baseStats.setDefense(evolved.getDefense());
+        this.baseStats.setSpeed(evolved.getSpeed());
 
+        // Congratulatory message
+        return true;
     }
 
     public boolean evolveUsingStone(String stoneType, PokemonManager manager) {
         if (!TypeUtils.isValidType(stoneType)) {
-            return false;
+            return false; // error msg
         }
 
         if (this.evolvesTo == 0) {
-            return false;
+            return false; // informative msg
         }
 
         // Get the evolved Pokémon data
@@ -384,8 +390,13 @@ public class Pokemon {
         }
 
         // Proceed with evolution
-        evolve(manager);
-        return true;
+        return evolve(manager);
+    }
+
+    public void useItem(Item item, PokemonManager manager) {
+        if (item != null) {
+            item.use(this, manager);
+        } // else display an informative message
     }
 
 }
@@ -453,19 +464,35 @@ class PokemonBaseStats {
     }
 
     public void setHP(int hp) {
-        this.hp += hp;
+        this.hp = hp;
     }
 
     public void setAttack(int attack) {
-        this.attack += attack;
+        this.attack = attack;
     }
 
     public void setDefense(int defense) {
-        this.defense += defense;
+        this.defense = defense;
     }
 
     public void setSpeed(int speed) {
-        this.speed += speed;
+        this.speed = speed;
+    }
+
+    public void addHP(int amount) {
+        this.hp += amount;
+    }
+
+    public void addAttack(int amount) {
+        this.attack += amount;
+    }
+
+    public void addDefense(int amount) {
+        this.defense += amount;
+    }
+
+    public void addSpeed(int amount) {
+        this.speed += amount;
     }
 
     /**
@@ -489,15 +516,16 @@ class PokemonBaseStats {
      * @return a valid integer value between 1 and 255 for the specified attribute
      */
     public static int readValidBaseStat(Scanner scan, String attribute) {
-        int input;
-
-        do {
-            input = PokemonManager.readValidInt(scan, attribute);
-            if (input < 1 || input > 255) {
-                System.out.println(attribute + " must be between 1-255 only!");
-            }
-        } while (input < 1 || input > 255);
-
-        return input;
+//        int input;
+//
+//        do {
+//            input = PokemonManager.readValidInt(scan, attribute);
+//            if (input < 1 || input > 255) {
+//                System.out.println(attribute + " must be between 1-255 only!");
+//            }
+//        } while (input < 1 || input > 255);
+//
+//        return input;
+        throw new UnsupportedOperationException("readValidBaseStat needs a GUI replacement.");
     }
 }

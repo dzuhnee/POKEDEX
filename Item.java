@@ -6,7 +6,7 @@ import java.util.Scanner;
  * Represents a single Pokémon item with attributes such as name, category, 
  * description, effect, buying/selling price, and stock quantity.
  */
-public class Item {
+public abstract class Item {
     // These are the properties of the item
     private final int buyingPrice;
     private final String name;
@@ -83,6 +83,8 @@ public class Item {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    public abstract void use(Pokemon pokemon, PokemonManager manager);
 }
 
 /**
@@ -111,35 +113,35 @@ class ItemManager {
      */
     public void populateInitialItems() {
         // Vitamins (boost EVs)
-        itemList.add(new Item("Calcium", "Vitamin", "A nutritious drink for Pokémon.", "+10 Special Attack EVs", 10000, 5000, 10));
-        itemList.add(new Item("Carbos", "Vitamin", "A nutritious drink for Pokémon.", "+10 Speed EVs", 10000, 5000, 10));
-        itemList.add(new Item("HP Up", "Vitamin", "A nutritious drink for Pokémon.", "+10 HP EVs", 10000, 5000, 10));
-        itemList.add(new Item("Iron", "Vitamin", "A nutritious drink for Pokémon.", "+10 Defense EVs", 10000, 5000, 10));
-        itemList.add(new Item("Protein", "Vitamin", "A nutritious drink for Pokémon.", "+10 Attack EVs", 10000, 5000, 10));
-        itemList.add(new Item("Zinc", "Vitamin", "A nutritious drink for Pokémon.", "+10 Special Defense EVs", 10000, 5000, 10));
+        itemList.add(new Vitamin("Calcium", "A nutritious drink for Pokémon.", "+10 Special Attack EVs", 10000, 5000, 10, "Special Attack"));
+        itemList.add(new Vitamin("Carbos", "A nutritious drink for Pokémon.", "+10 Speed EVs", 10000, 5000, 10, "Speed"));
+        itemList.add(new Vitamin("HP Up", "A nutritious drink for Pokémon.", "+10 HP EVs", 10000, 5000, 10, "HP"));
+        itemList.add(new Vitamin("Iron", "A nutritious drink for Pokémon.", "+10 Defense EVs", 10000, 5000, 10, "Defense"));
+        itemList.add(new Vitamin("Protein", "A nutritious drink for Pokémon.", "+10 Attack EVs", 10000, 5000, 10, "Attack"));
+        itemList.add(new Vitamin("Zinc", "A nutritious drink for Pokémon.", "+10 Special Defense EVs", 10000, 5000, 10, "Special Defense"));
 
         // Feathers
-        itemList.add(new Item("Health Feather", "Feather", "Slightly increases HP.", "+1 HP EV", 300, 150, 10));
-        itemList.add(new Item("Muscle Feather", "Feather", "Slightly increases Attack.", "+1 Attack EV", 300, 150, 10));
-        itemList.add(new Item("Resist Feather", "Feather", "Slightly increases Defense.", "+1 Defense EV", 300, 150, 10));
-        itemList.add(new Item("Swift Feather", "Feather", "Slightly increases Speed.", "+1 Speed EV", 300, 150, 10));
-        itemList.add(new Item("Genius Feather", "Feather", "Slightly increases Special Attack.", "+1 Special Attack EV", 300, 150, 10));
-        itemList.add(new Item("Clever Feather", "Feather", "Slightly increases Special Defense.", "+1 Special Defense EV", 300, 150, 10));
+        itemList.add(new Feather("Health Feather", "Slightly increases HP.", "+1 HP EV", 300, 150, 10, "HP"));
+        itemList.add(new Feather("Muscle Feather", "Slightly increases Attack.", "+1 Attack EV", 300, 150, 10, "Attack"));
+        itemList.add(new Feather("Resist Feather", "Slightly increases Defense.", "+1 Defense EV", 300, 150, 10, "Defense"));
+        itemList.add(new Feather("Swift Feather", "Slightly increases Speed.", "+1 Speed EV", 300, 150, 10, "Speed"));
+        itemList.add(new Feather("Genius Feather", "Slightly increases Special Attack.", "+1 Special Attack EV", 300, 150, 10, "Special Attack"));
+        itemList.add(new Feather("Clever Feather", "Slightly increases Special Defense.", "+1 Special Defense EV", 300, 150, 10, "Special Defense"));
 
         // Others
-        itemList.add(new Item("Rare Candy", "Leveling Item", "A candy packed with energy.", "Increases level by 1", -1, 2400, 10));
+        itemList.add(new RareCandy("Rare Candy", "A candy packed with energy.", "Increases level by 1", -1, 2400, 10));
 
         // Evolution Stones
-        itemList.add(new Item("Fire Stone", "Evolution Stone", "Radiates heat.", "Evolves Vulpix, Growlithe, Eevee, etc.", 3000, 1500, 10));
-        itemList.add(new Item("Water Stone", "Evolution Stone", "Blue, watery appearance.", "Evolves Poliwhirl, Shellder, Eevee, etc.", 3000, 1500, 10));
-        itemList.add(new Item("Thunder Stone", "Evolution Stone", "Sparkles with electricity.", "Evolves Pikachu, Eelektrik, Eevee, etc.", 3000, 1500, 10));
-        itemList.add(new Item("Leaf Stone", "Evolution Stone", "Leaf pattern.", "Evolves Gloom, Weepinbell, Exeggcute etc.", 3000, 1500, 10));
-        itemList.add(new Item("Moon Stone", "Evolution Stone", "Glows faintly.", "Evolves Nidorina, Clefairy, Jigglypuff, etc.", -1, 1500, 10));
-        itemList.add(new Item("Sun Stone", "Evolution Stone", "Glows like the sun.", "Evolves Gloom, Sunkern, Cottonee, etc.", 3000, 1500, 10));
-        itemList.add(new Item("Shiny Stone", "Evolution Stone", "Sparkles brightly.", "Evolves Togetic, Roselia, Minccino, etc.", 3000, 1500, 10));
-        itemList.add(new Item("Dusk Stone", "Evolution Stone", "Ominous appearance.", "Evolves Murkrow, Misdreavus, Doublade, etc.", 3000, 1500, 10));
-        itemList.add(new Item("Dawn Stone", "Evolution Stone", "Sparkles like the morning sky.", "Evolves male Kirlia and female Snorunt.", 3000, 1500, 10));
-        itemList.add(new Item("Ice Stone", "Evolution Stone", "Cold to the touch.", "Evolves Alolan Vulpix, etc.", 3000, 1500, 10));
+        itemList.add(new EvolutionStone("Fire Stone", "Radiates heat.", "Evolves Vulpix, Growlithe, Eevee, etc.", 3000, 1500, 10, "Fire"));
+        itemList.add(new EvolutionStone("Water Stone",  "Blue, watery appearance.", "Evolves Poliwhirl, Shellder, Eevee, etc.", 3000, 1500, 10, "Water"));
+        itemList.add(new EvolutionStone("Thunder Stone",  "Sparkles with electricity.", "Evolves Pikachu, Eelektrik, Eevee, etc.", 3000, 1500, 10, "Electric"));
+        itemList.add(new EvolutionStone("Leaf Stone",  "Leaf pattern.", "Evolves Gloom, Weepinbell, Exeggcute etc.", 3000, 1500, 10, "Grass"));
+        itemList.add(new EvolutionStone("Moon Stone",  "Glows faintly.", "Evolves Nidorina, Clefairy, Jigglypuff, etc.", -1, 1500, 10, "Moon"));
+        itemList.add(new EvolutionStone("Sun Stone",  "Glows like the sun.", "Evolves Gloom, Sunkern, Cottonee, etc.", 3000, 1500, 10, "Sun"));
+        itemList.add(new EvolutionStone("Shiny Stone",  "Sparkles brightly.", "Evolves Togetic, Roselia, Minccino, etc.", 3000, 1500, 10, "Fairy"));
+        itemList.add(new EvolutionStone("Dusk Stone",  "Ominous appearance.", "Evolves Murkrow, Misdreavus, Doublade, etc.", 3000, 1500, 10, "Dark"));
+        itemList.add(new EvolutionStone("Dawn Stone",  "Sparkles like the morning sky.", "Evolves male Kirlia and female Snorunt.", 3000, 1500, 10, "Psychic"));
+        itemList.add(new EvolutionStone("Ice Stone",  "Cold to the touch.", "Evolves Alolan Vulpix, etc.", 3000, 1500, 10, "Ice"));
     }
 
     /**
