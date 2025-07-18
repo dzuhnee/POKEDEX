@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
- * Represents a single Pokémon item with attributes such as name, category, 
+ * Represents a single Pokémon item with attributes such as name, category,
  * description, effect, buying/selling price, and stock quantity.
  */
+// delete Items.java later
 public abstract class Item {
     // These are the properties of the item
     private final int buyingPrice;
@@ -18,14 +18,14 @@ public abstract class Item {
 
     /**
      * Constructs an Item with all necessary properties.
-     * 
-     * @param name the name of the item
-     * @param category the category of the item (e.g., Vitamin, Feather)
-     * @param description a short description of the item
-     * @param effect the effect it has on Pokémon
-     * @param buyingPrice price to buy the item
+     *
+     * @param name         the name of the item
+     * @param category     the category of the item (e.g., Vitamin, Feather)
+     * @param description  a short description of the item
+     * @param effect       the effect it has on Pokémon
+     * @param buyingPrice  price to buy the item
      * @param sellingPrice price to sell the item
-     * @param stock initial stock quantity
+     * @param stock        initial stock quantity
      */
     public Item(String name, String category, String description, String effect,
                 int buyingPrice, int sellingPrice, int stock) {
@@ -40,44 +40,58 @@ public abstract class Item {
 
     // Getters
 
-    /** @return the name of the item */
+    /**
+     * @return the name of the item
+     */
     public String getName() {
         return name;
     }
 
-    /** @return the category of the item */
+    /**
+     * @return the category of the item
+     */
     public String getCategory() {
         return category;
     }
 
-    /** @return the description of the item */
+    /**
+     * @return the description of the item
+     */
     public String getDescription() {
         return description;
     }
 
-    /** @return the effect the item has */
+    /**
+     * @return the effect the item has
+     */
     public String getEffect() {
         return effect;
     }
 
-    /** @return the buying price of the item */
+    /**
+     * @return the buying price of the item
+     */
     public int getBuyingPrice() {
         return buyingPrice;
     }
 
-    /** @return the selling price of the item */
+    /**
+     * @return the selling price of the item
+     */
     public int getSellingPrice() {
         return sellingPrice;
     }
 
-    /** @return the current stock quantity */
+    /**
+     * @return the current stock quantity
+     */
     public int getStock() {
         return stock;
     }
 
     /**
      * Sets the stock value for the item.
-     * 
+     *
      * @param stock the new stock quantity
      */
     public void setStock(int stock) {
@@ -85,6 +99,28 @@ public abstract class Item {
     }
 
     public abstract void use(Pokemon pokemon, PokemonManager manager);
+
+    public String displayInfo() {
+        StringBuilder details = new StringBuilder();
+        details.append("Name: ").append(name).append("\n");
+        details.append("Category: ").append(category).append("\n");
+        details.append("Description: ").append(description).append("\n");
+        details.append("Effect: ").append(effect).append("\n");
+        details.append("Buying Price: ");
+        if (buyingPrice == -1) {
+            details.append("N/A (Not for sale)\n");
+        } else {
+            details.append("$").append(buyingPrice).append("\n");
+        }
+        details.append("Selling Price: ");
+        if (sellingPrice == -1) {
+            details.append("N/A (Cannot be sold)\n");
+        } else {
+            details.append("$").append(sellingPrice).append("\n");
+        }
+        details.append("Current Stock: ").append(stock);
+        return details.toString();
+    }
 }
 
 /**
@@ -93,18 +129,12 @@ public abstract class Item {
  */
 class ItemManager {
 
-    private final Scanner scanner; // For taking user input
     private final List<Item> itemList; // List to store all the item objects
 
-    /**
-     * Constructs the Items manager and populates it with default items.
-     * 
-     * @param scanner the Scanner object for user input
-     */
-    public ItemManager(final Scanner scanner) {
+
+    public ItemManager() {
         itemList = new ArrayList<>();
         populateInitialItems();
-        this.scanner = scanner;
     }
 
     /**
@@ -133,147 +163,58 @@ class ItemManager {
 
         // Evolution Stones
         itemList.add(new EvolutionStone("Fire Stone", "Radiates heat.", "Evolves Vulpix, Growlithe, Eevee, etc.", 3000, 1500, 10, "Fire"));
-        itemList.add(new EvolutionStone("Water Stone",  "Blue, watery appearance.", "Evolves Poliwhirl, Shellder, Eevee, etc.", 3000, 1500, 10, "Water"));
-        itemList.add(new EvolutionStone("Thunder Stone",  "Sparkles with electricity.", "Evolves Pikachu, Eelektrik, Eevee, etc.", 3000, 1500, 10, "Electric"));
-        itemList.add(new EvolutionStone("Leaf Stone",  "Leaf pattern.", "Evolves Gloom, Weepinbell, Exeggcute etc.", 3000, 1500, 10, "Grass"));
-        itemList.add(new EvolutionStone("Moon Stone",  "Glows faintly.", "Evolves Nidorina, Clefairy, Jigglypuff, etc.", -1, 1500, 10, "Moon"));
-        itemList.add(new EvolutionStone("Sun Stone",  "Glows like the sun.", "Evolves Gloom, Sunkern, Cottonee, etc.", 3000, 1500, 10, "Sun"));
-        itemList.add(new EvolutionStone("Shiny Stone",  "Sparkles brightly.", "Evolves Togetic, Roselia, Minccino, etc.", 3000, 1500, 10, "Fairy"));
-        itemList.add(new EvolutionStone("Dusk Stone",  "Ominous appearance.", "Evolves Murkrow, Misdreavus, Doublade, etc.", 3000, 1500, 10, "Dark"));
-        itemList.add(new EvolutionStone("Dawn Stone",  "Sparkles like the morning sky.", "Evolves male Kirlia and female Snorunt.", 3000, 1500, 10, "Psychic"));
-        itemList.add(new EvolutionStone("Ice Stone",  "Cold to the touch.", "Evolves Alolan Vulpix, etc.", 3000, 1500, 10, "Ice"));
+        itemList.add(new EvolutionStone("Water Stone", "Blue, watery appearance.", "Evolves Poliwhirl, Shellder, Eevee, etc.", 3000, 1500, 10, "Water"));
+        itemList.add(new EvolutionStone("Thunder Stone", "Sparkles with electricity.", "Evolves Pikachu, Eelektrik, Eevee, etc.", 3000, 1500, 10, "Electric"));
+        itemList.add(new EvolutionStone("Leaf Stone", "Leaf pattern.", "Evolves Gloom, Weepinbell, Exeggcute etc.", 3000, 1500, 10, "Grass"));
+        itemList.add(new EvolutionStone("Moon Stone", "Glows faintly.", "Evolves Nidorina, Clefairy, Jigglypuff, etc.", -1, 1500, 10, "Moon"));
+        itemList.add(new EvolutionStone("Sun Stone", "Glows like the sun.", "Evolves Gloom, Sunkern, Cottonee, etc.", 3000, 1500, 10, "Sun"));
+        itemList.add(new EvolutionStone("Shiny Stone", "Sparkles brightly.", "Evolves Togetic, Roselia, Minccino, etc.", 3000, 1500, 10, "Fairy"));
+        itemList.add(new EvolutionStone("Dusk Stone", "Ominous appearance.", "Evolves Murkrow, Misdreavus, Doublade, etc.", 3000, 1500, 10, "Dark"));
+        itemList.add(new EvolutionStone("Dawn Stone", "Sparkles like the morning sky.", "Evolves male Kirlia and female Snorunt.", 3000, 1500, 10, "Psychic"));
+        itemList.add(new EvolutionStone("Ice Stone", "Cold to the touch.", "Evolves Alolan Vulpix, etc.", 3000, 1500, 10, "Ice"));
     }
 
-    /**
-     * Displays all available items in a formatted list.
-     */
-    public void viewAllItemsAvailable() {
-        if (itemList.isEmpty()) {
-            System.out.println("\nSystem: No items in the database.");
-            return;
-        }
-    
-        // Center the title
-        String title = "Item Database";
-        int consoleWidth = 60; // approximate width based on the table
-        int padding = (consoleWidth - title.length()) / 2;
-        System.out.println(" ".repeat(Math.max(0, padding)) + title);
-    
-        // Table header
-        String formatHeader = "%-25s %-20s %-40s\n";
-        System.out.printf(formatHeader, "\nItem Name", "Category", "Effect");
-        System.out.println("=========================================================================");
-    
-        // Loop through each item and print it
-        for (Item item : itemList) {
-            String name = item.getName();
-            String category = item.getCategory();
-            String effect = item.getEffect();
-    
-            if (effect.length() <= 40) {
-                System.out.printf("%-25s %-20s %-40s\n", name, category, effect);
-            } else {
-                System.out.printf("%-25s %-20s %-40s\n", name, category, effect.substring(0, 40));
-                int index = 40;
-                while (index < effect.length()) {
-                    int end = Math.min(index + 40, effect.length());
-                    System.out.printf("%-25s %-20s %-40s\n", "", "", effect.substring(index, end));
-                    index += 40;
-                }
-            }
-        }
-    }    
 
-    /**
-     * Displays a menu to let the user choose a search option.
-     * Allows searching by item name/effect or by category.
-     */
-    public void handleItemSearch() {
-        System.out.println("\n--- Search Pokémon Items ---");
-        System.out.printf("%-5s %-30s%n", "1.", "By Name or Effect");
-        System.out.printf("%-5s %-30s%n", "2.", "By Category (e.g., Vitamin, Feather)");
-        System.out.printf("%-5s", "");
-        System.out.print("Enter option: ");
-
-        String option = scanner.nextLine().trim();
-
-        switch (option) {
-            case "1":
-                System.out.print("Enter keyword (name or effect): ");
-                String keyword = scanner.nextLine().trim();
-                searchItemsByNameOrEffect(keyword);
-                break;
-
-            case "2":
-                System.out.print("Enter category (Vitamin, Feather, Leveling Item, Evolution Stone): ");
-                String category = scanner.nextLine().trim();
-                searchByCategory(category);
-                break;
-
-            default:
-                System.out.println("Invalid option.");
-        }
+    public List<Item> getAllItems() {
+        return new ArrayList<>(itemList);
     }
 
     /**
      * Searches items by their name or effect using a keyword.
-     * 
+     *
      * @param keyword the search keyword entered by the user
      */
-    public void searchItemsByNameOrEffect(String keyword) {
+    public List<Item> searchItemsByNameOrEffect(String keyword) {
         List<Item> results = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
 
         for (Item item : itemList) {
             if (item.getName().toLowerCase().contains(lowerKeyword) ||
-                item.getEffect().toLowerCase().contains(lowerKeyword)) {
+                    item.getEffect().toLowerCase().contains(lowerKeyword)) {
                 results.add(item);
             }
         }
-        showItemSearchResults(results, "Name/Effect contains: " + keyword);
+        return results;
     }
 
     /**
      * Searches items by category (e.g., Vitamin, Feather).
-     * 
+     *
      * @param category the category name to search
      */
-    public void searchByCategory(String category) {
+    public List<Item> searchByCategory(String category) {
         List<Item> results = new ArrayList<>();
         for (Item item : itemList) {
             if (item.getCategory().equalsIgnoreCase(category)) {
                 results.add(item);
             }
         }
-        showItemSearchResults(results, "Category: " + category);
-    }
-
-    /**
-     * Displays the search results in a tabular format.
-     * 
-     * @param results the list of matching items
-     * @param title   a title to indicate the search context
-     */
-    private void showItemSearchResults(List<Item> results, String title) {
-        if (results.isEmpty()) {
-            System.out.println("No items found for " + title);
-            return;
-        }
-
-        System.out.println("Search Results for " + title);
-        String formatHeader = "%-25s %-20s %-35s\n";
-        System.out.printf(formatHeader, "\nItem Name", "Category", "Effect");
-        System.out.println("=========================================================================");
-
-        String formatRow = "%-25s %-20s %-35s\n";
-        for (Item item : results) {
-            System.out.printf(formatRow, item.getName(), item.getCategory(), item.getEffect());
-        }
+        return results;
     }
 
     /**
      * Finds and returns an item by its name (case-insensitive).
-     * 
+     *
      * @param heldItem the name of the item to find
      * @return the Item if found, or null otherwise
      */
@@ -286,14 +227,51 @@ class ItemManager {
         return null;
     }
 
-    public boolean isValid(String heldItem){
-        Item item = findItem(heldItem);
+    public boolean itemExists(String item) {
+        return findItem(item) != null;
+    }
 
-        if (item != null) {
-            return true;
+    public int buyItem(String itemName, int quantity) {
+        Item item = findItem(itemName);
+
+        if (item == null) {      // Item not found
+            return -1;
         }
 
-        return false;
+        if (quantity <= 0) {        // Invalid quantity
+            return -1;
+        }
+
+        if (item.getBuyingPrice() == -1) {      // There's no negative na price
+            return -1;
+        }
+
+        if (item.getStock() >= quantity) {
+            item.setStock(item.getStock() - quantity);
+            return item.getBuyingPrice() * quantity;
+        } else {
+            return -1;
+        }
     }
+
+    public int sellItem(String itemName, int quantity) {
+        Item item = findItem(itemName);
+
+        if (item == null) {      // Item not found
+            return -1;
+        }
+
+        if (quantity <= 0) {        // Invalid quantity
+            return -1;
+        }
+
+        if (item.getSellingPrice() == -1) {      // There's no negative na price
+            return -1;
+        }
+
+        item.setStock(item.getStock() + quantity);
+        return item.getSellingPrice() * quantity;
+    }
+
 
 }
